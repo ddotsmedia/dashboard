@@ -2,7 +2,7 @@
  * User & Auth Types
  */
 
-export type Role = 'CFO' | 'FinanceManager' | 'Accountant' | 'Management' | 'Viewer';
+export type Role = 'cfo' | 'finance-manager' | 'accountant' | 'management';
 
 export interface User {
   id: string;
@@ -78,7 +78,7 @@ export type RolePermissionMap = {
 };
 
 export const DEFAULT_PERMISSIONS: RolePermissionMap = {
-  CFO: {
+  cfo: {
     canViewDashboard: true,
     canViewAnalytics: true,
     canViewTransactions: true,
@@ -95,7 +95,7 @@ export const DEFAULT_PERMISSIONS: RolePermissionMap = {
     canManageUsers: true,
     canConfigureAlerts: true,
   },
-  FinanceManager: {
+  'finance-manager': {
     canViewDashboard: true,
     canViewAnalytics: true,
     canViewTransactions: true,
@@ -112,7 +112,7 @@ export const DEFAULT_PERMISSIONS: RolePermissionMap = {
     canManageUsers: false,
     canConfigureAlerts: true,
   },
-  Accountant: {
+  accountant: {
     canViewDashboard: true,
     canViewAnalytics: false,
     canViewTransactions: true,
@@ -129,7 +129,7 @@ export const DEFAULT_PERMISSIONS: RolePermissionMap = {
     canManageUsers: false,
     canConfigureAlerts: false,
   },
-  Management: {
+  management: {
     canViewDashboard: true,
     canViewAnalytics: true,
     canViewTransactions: false,
@@ -142,23 +142,6 @@ export const DEFAULT_PERMISSIONS: RolePermissionMap = {
     canViewAIInsights: true,
     canEditSettings: false,
     canExportData: true,
-    canApproveTransactions: false,
-    canManageUsers: false,
-    canConfigureAlerts: false,
-  },
-  Viewer: {
-    canViewDashboard: true,
-    canViewAnalytics: true,
-    canViewTransactions: false,
-    canViewReceivables: true,
-    canViewPayables: true,
-    canViewCashFlow: true,
-    canViewBudget: true,
-    canViewProfitability: true,
-    canViewReports: true,
-    canViewAIInsights: true,
-    canEditSettings: false,
-    canExportData: false,
     canApproveTransactions: false,
     canManageUsers: false,
     canConfigureAlerts: false,

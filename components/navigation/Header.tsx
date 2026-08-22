@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useUI } from '@/lib/store';
+import { useUI, useAuth } from '@/lib/store';
 import { Menu, X, Sliders } from 'lucide-react';
 import { CompanySelector } from './selectors/CompanySelector';
 import { BranchSelector } from './selectors/BranchSelector';
 import { DateRangeSelector } from './selectors/DateRangeSelector';
 import { ComparisonSelector } from './selectors/ComparisonSelector';
 import { CurrencySelector } from './selectors/CurrencySelector';
+import { RoleSelector } from '@/components/dashboard/RoleSelector';
+import { RoleInfo } from '@/components/dashboard/RoleInfo';
 import { ThemeSwitcher } from './header/ThemeSwitcher';
 import { SearchButton } from './header/SearchButton';
 import { NotificationsBell } from './header/NotificationsBell';
@@ -18,6 +20,7 @@ import { CustomizeModal } from '@/components/dashboard/CustomizeModal';
 
 export function Header() {
   const { sidebarOpen, toggleSidebar, toggleAIAssistant } = useUI();
+  const { currentRole } = useAuth();
   const isMobile = useIsMobile();
   const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
 
@@ -84,6 +87,10 @@ export function Header() {
           >
             <Sliders className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           </button>
+          <div className="hidden md:flex items-center gap-1.5">
+            <RoleSelector currentRole={currentRole} />
+            <RoleInfo role={currentRole} />
+          </div>
           <ThemeSwitcher />
           <UserMenu />
         </div>

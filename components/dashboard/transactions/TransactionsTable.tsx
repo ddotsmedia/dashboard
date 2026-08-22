@@ -10,7 +10,6 @@ import {
   useReactTable,
   type ColumnDef,
   type SortingState,
-  type ColumnVisibilityState,
   type VisibilityState,
 } from '@tanstack/react-table';
 import { ArrowUpDown, Eye, EyeOff, Download, FileJson, FileSpreadsheet, Plus, MoreVertical, AlertCircle } from 'lucide-react';
@@ -54,7 +53,7 @@ export function TransactionsTable() {
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingState>([{ id: 'date', desc: true }]);
-  const [columnVisibility, setColumnVisibility] = useState<ColumnVisibilityState>({
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     select: true,
   });
   const [rowSelection, setRowSelection] = useState({});

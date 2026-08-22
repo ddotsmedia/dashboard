@@ -11,6 +11,13 @@ interface ExportRow {
   [key: string]: string | number | boolean | null | undefined;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type jsPDFDocument = any;
+
+interface AutoTableData {
+  pageNumber: number;
+}
+
 /**
  * Export table data to PDF
  * Note: For production, install jsPDF and jspdf-autotable:
@@ -50,7 +57,8 @@ export async function exportTableToPDF(
       // Try to use autoTable if available
       try {
         await import('jspdf-autotable');
-        (doc as any).autoTable({
+        const docWithAutoTable = doc as unknown as jsPDFDocument;
+        docWithAutoTable.autoTable?.({
           head: [headers],
           body: rows,
           startY: 22,
@@ -71,20 +79,21 @@ export async function exportTableToPDF(
             fillColor: [240, 240, 240],
           },
           margin: { top: 30 },
-          didDrawPage: (data: any) => {
+          didDrawPage: (pageData: AutoTableData) => {
             // Footer
             const pageSize = doc.internal.pageSize;
             const pageHeight = pageSize.getHeight();
             const pageWidth = pageSize.getWidth();
-            const pageCount = (doc as any).internal.getNumberOfPages?.();
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const pageCount = (doc.internal as any).getNumberOfPages?.();
 
             doc.setFontSize(9);
-            doc.text(`Page ${data.pageNumber} of ${pageCount}`, pageWidth - 20, pageHeight - 10);
+            doc.text(`Page ${pageData.pageNumber} of ${pageCount}`, pageWidth - 20, pageHeight - 10);
           },
         });
-      } catch (err) {
+      } catch {
         // AutoTable not available, create simple table manually
-        createSimplePDFTable(doc, headers, rows, 22);
+        createSimplePDFTable(doc as unknown as jsPDFDocument, headers, rows, 22);
       }
 
       doc.save(filename);
@@ -120,7 +129,7 @@ export async function exportTransactionsToPDF(transactions: Transaction[], filen
 /**
  * Create a simple table in PDF manually
  */
-function createSimplePDFTable(doc: any, headers: string[], rows: string[][], startY: number): void {
+function createSimplePDFTable(doc: jsPDFDocument, headers: string[], rows: string[][], startY: number): void {
   const pageWidth = doc.internal.pageSize.getWidth();
   const colWidth = (pageWidth - 28) / headers.length;
   let currentY = startY;

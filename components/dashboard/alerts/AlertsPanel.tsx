@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useEffect, useState, type ReactElement } from 'react';
+import React, { useEffect, useState, useCallback, type ReactElement } from 'react';
 import { useRouter } from 'next/navigation';
 import { Bell, ChevronRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
@@ -58,7 +58,7 @@ export function AlertsPanel(): ReactElement {
   /**
    * Load alerts from service
    */
-  const loadAlerts = async () => {
+  const loadAlerts = useCallback(async () => {
     try {
       setIsLoading(true);
       setIsError(false);
@@ -77,14 +77,17 @@ export function AlertsPanel(): ReactElement {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedFilter]);
 
   /**
    * Load alerts on component mount and when filter changes
    */
   useEffect(() => {
-    loadAlerts();
-  }, [selectedFilter]);
+    const executeLoadAlerts = async () => {
+      await loadAlerts();
+    };
+    executeLoadAlerts();
+  }, [loadAlerts]);
 
   /**
    * Handle dismissing an alert

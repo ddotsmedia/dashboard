@@ -235,7 +235,7 @@ export function LayoutManager({
               Delete Layout?
             </h3>
             <p className="text-slate-600 dark:text-slate-400 mb-4 text-sm">
-              Are you sure you want to delete the layout "{confirmDeleteLayout}"? This action cannot be undone.
+              Are you sure you want to delete the layout &quot;{confirmDeleteLayout}&quot;? This action cannot be undone.
             </p>
             <div className="flex gap-2 justify-end">
               <button

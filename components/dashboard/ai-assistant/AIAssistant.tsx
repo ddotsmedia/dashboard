@@ -99,7 +99,7 @@ export function AIAssistant() {
                 Welcome to AI Finance Assistant
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Ask me about your company's financial performance, trends, and insights.
+                Ask me about your company&apos;s financial performance, trends, and insights.
               </p>
             </div>
           </div>

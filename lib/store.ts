@@ -7,6 +7,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User, Role } from '@/types/user';
 import { DEFAULT_LAYOUT } from '@/config/defaultLayout';
+import { getRoleConfig } from '@/config/roleConfig';
 
 /**
  * Filter State
@@ -51,10 +52,11 @@ export interface UISlice {
  */
 export interface AuthSlice {
   currentUser: User | null;
-  currentRole: Role | null;
+  currentRole: Role;
   isAuthenticated: boolean;
   setCurrentUser: (user: User | null) => void;
-  setCurrentRole: (role: Role | null) => void;
+  setCurrentRole: (role: Role) => void;
+  setRole: (role: Role) => void;
   logout: () => void;
 }
 
@@ -81,6 +83,7 @@ export interface DashboardSlice {
   widgetOrder: string[];
   widgetSizes: Record<string, 1 | 2 | 3 | 4>;
   savedLayouts: Record<string, Layout>;
+  perRoleLayouts: Record<Role, Record<string, Layout>>;
   toggleWidget: (widgetId: string) => void;
   setWidgetOrder: (order: string[]) => void;
   setWidgetSize: (widgetId: string, size: 1 | 2 | 3 | 4) => void;
@@ -88,6 +91,7 @@ export interface DashboardSlice {
   saveLayout: (name: string, layout: Layout) => void;
   loadLayout: (name: string) => void;
   deleteLayout: (name: string) => void;
+  applyRoleLayout: (role: Role) => void;
 }
 
 // Default values
@@ -100,7 +104,7 @@ const DEFAULT_MOCK_USER: User = {
   id: 'user-001',
   email: 'mammikutty@al-watan.ae',
   name: 'Finance Manager',
-  role: 'FinanceManager',
+  role: 'finance-manager',
   department: 'Finance',
   company: 'Al-Watan',
   permissions: {
@@ -200,19 +204,37 @@ export const useStore = create<Store>()(
 
       // Auth Slice
       currentUser: DEFAULT_MOCK_USER,
-      currentRole: 'FinanceManager',
+      currentRole: 'finance-manager',
       isAuthenticated: true,
       setCurrentUser: (user) =>
-        set({
-          currentUser: user,
-          isAuthenticated: user !== null,
-          currentRole: user?.role || null,
+        set((state) => {
+          const newRole = user?.role || 'management';
+          const roleConfig = getRoleConfig(newRole);
+          return {
+            currentUser: user,
+            isAuthenticated: user !== null,
+            currentRole: newRole,
+            widgetVisibility: roleConfig.defaultLayout.widgetVisibility,
+            widgetOrder: roleConfig.defaultLayout.widgetOrder,
+            widgetSizes: roleConfig.defaultLayout.widgetSizes,
+          };
         }),
       setCurrentRole: (role) => set({ currentRole: role }),
+      setRole: (role) =>
+        set((state) => {
+          const roleConfig = getRoleConfig(role);
+          return {
+            currentRole: role,
+            currentUser: state.currentUser ? { ...state.currentUser, role } : null,
+            widgetVisibility: roleConfig.defaultLayout.widgetVisibility,
+            widgetOrder: roleConfig.defaultLayout.widgetOrder,
+            widgetSizes: roleConfig.defaultLayout.widgetSizes,
+          };
+        }),
       logout: () =>
         set({
           currentUser: null,
-          currentRole: null,
+          currentRole: 'management',
           isAuthenticated: false,
           notifications: [],
         }),
@@ -222,6 +244,12 @@ export const useStore = create<Store>()(
       widgetOrder: DEFAULT_LAYOUT.widgetOrder,
       widgetSizes: DEFAULT_LAYOUT.widgetSizes,
       savedLayouts: {},
+      perRoleLayouts: {
+        cfo: {},
+        'finance-manager': {},
+        accountant: {},
+        management: {},
+      },
       toggleWidget: (widgetId) =>
         set((state) => ({
           widgetVisibility: {
@@ -265,6 +293,23 @@ export const useStore = create<Store>()(
           const { [name]: _, ...rest } = state.savedLayouts;
           return { savedLayouts: rest };
         }),
+      applyRoleLayout: (role) =>
+        set((state) => {
+          const roleConfig = getRoleConfig(role);
+          const defaultLayout = roleConfig.defaultLayout;
+
+          // Check if there's a saved layout for this role
+          const roleLayouts = state.perRoleLayouts[role] || {};
+          const lastSavedLayout = Object.values(roleLayouts)[0]; // Get most recent saved layout
+
+          const newLayout = lastSavedLayout || defaultLayout;
+
+          return {
+            widgetVisibility: newLayout.widgetVisibility,
+            widgetOrder: newLayout.widgetOrder,
+            widgetSizes: newLayout.widgetSizes,
+          };
+        }),
     }),
     {
       name: 'dashboard-customization',
@@ -282,6 +327,7 @@ export const useStore = create<Store>()(
         widgetOrder: state.widgetOrder,
         widgetSizes: state.widgetSizes,
         savedLayouts: state.savedLayouts,
+        perRoleLayouts: state.perRoleLayouts,
         aiAssistantOpen: state.aiAssistantOpen,
       }),
     }
@@ -329,7 +375,17 @@ export const useAuth = () =>
     isAuthenticated: state.isAuthenticated,
     setCurrentUser: state.setCurrentUser,
     setCurrentRole: state.setCurrentRole,
+    setRole: state.setRole,
     logout: state.logout,
+  }));
+
+/**
+ * Role selector hook
+ */
+export const useRole = () =>
+  useStore((state) => ({
+    currentRole: state.currentRole,
+    setRole: state.setRole,
   }));
 
 /**

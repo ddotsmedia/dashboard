@@ -23,8 +23,8 @@ export async function exportTableToExcel(data: ExportRow[], filename: string = '
 
   try {
     // Try to use XLSX library if available
-    const module = await import('xlsx');
-    const XLSX = module.default || module;
+    const xlsxModule = await import('xlsx');
+    const XLSX = xlsxModule.default || xlsxModule;
 
     if (XLSX && XLSX.utils && XLSX.writeFile) {
       const worksheet = XLSX.utils.json_to_sheet(data);

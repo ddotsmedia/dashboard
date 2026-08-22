@@ -2,11 +2,14 @@
  * Dashboard Content Component
  * Main dashboard container with KPI cards, widgets, and charts
  * Renders widgets in customizable order with visibility and sizing
+ * Role-aware: filters widgets based on current user role
  */
 
 'use client';
 
 import { useDashboardCustomization } from '@/hooks/useDashboardCustomization';
+import { useRole } from '@/lib/store';
+import { getRoleConfig } from '@/config/roleConfig';
 import { DashboardWidget } from './DashboardWidget';
 import { KPICards } from './kpi/KPICards';
 import { ARWidget } from './receivables/ARWidget';
@@ -60,11 +63,17 @@ function getWidgetComponent(widgetId: string): React.ReactNode {
 
 export function DashboardContent() {
   const customization = useDashboardCustomization();
+  const { currentRole } = useRole();
+  const roleConfig = getRoleConfig(currentRole);
 
-  // Filter and order widgets based on customization
-  const visibleWidgets = customization.widgetOrder.filter((id) =>
-    customization.isWidgetVisible(id)
-  );
+  // Filter and order widgets based on customization and role configuration
+  const visibleWidgets = customization.widgetOrder.filter((id) => {
+    // Check if widget is allowed for this role
+    const isAllowedForRole = roleConfig.widgets.includes(id);
+    // Check if widget is visible in current layout
+    const isVisible = customization.isWidgetVisible(id);
+    return isAllowedForRole && isVisible;
+  });
 
   // Deduplicate widgets that render the same component
   // (e.g., multiple KPI widgets or analytics widgets)
@@ -83,7 +92,7 @@ export function DashboardContent() {
         </div>
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-gray-400">
-            No widgets visible. Use the Customize Dashboard button to enable widgets.
+            No widgets available for your role. Contact your administrator for access.
           </p>
         </div>
       </div>
@@ -91,7 +100,7 @@ export function DashboardContent() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 transition-opacity duration-300">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">

@@ -3,6 +3,7 @@
  * 100+ realistic transactions spanning 12 months (September 2023 - August 2024)
  * Includes various transaction types with realistic amounts, statuses, and categories
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { Transaction } from '@/types/dashboard';
 

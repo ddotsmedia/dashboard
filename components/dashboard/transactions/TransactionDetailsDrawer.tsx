@@ -95,7 +95,7 @@ export function TransactionDetailsDrawer({ transaction, isOpen, onClose }: Trans
                     {transaction.type === 'revenue' || transaction.type === 'credit' || transaction.type === 'receipt'
                       ? '+'
                       : '-'}
-                    {formatCurrency(transaction.amount, transaction.currency as any)}
+                    {formatCurrency(transaction.amount, transaction.currency || 'AED')}
                   </p>
                   <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{transaction.currency || 'AED'}</span>
                 </div>
