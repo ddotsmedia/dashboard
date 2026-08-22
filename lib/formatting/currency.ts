@@ -1,6 +1,11 @@
 /**
  * Currency Formatting Utilities
+ * Provides locale-aware currency formatting
  */
+
+import { formatCurrency as formatCurrencyLocalized, formatNumber as formatNumberLocalized } from '@/lib/localization/formatters';
+
+type Locale = 'en' | 'ar';
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
   AED: 'د.إ',
@@ -14,67 +19,47 @@ const CURRENCY_DECIMALS: Record<string, number> = {
   EUR: 2,
 };
 
+/**
+ * Format currency with locale support
+ * @param value The numeric value to format
+ * @param currency The currency code (AED, USD, EUR)
+ * @param locale The locale ('en' or 'ar')
+ * @returns Formatted currency string
+ */
 export function formatCurrency(
   value: number,
   currency: 'AED' | 'USD' | 'EUR' = 'AED',
-  locale: string = 'ar-AE'
+  locale: Locale = 'ar'
 ): string {
-  if (isNaN(value)) return '0';
-
-  const decimals = CURRENCY_DECIMALS[currency] || 2;
-  const symbol = CURRENCY_SYMBOLS[currency] || currency;
-
-  try {
-    const formatter = new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency,
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    });
-    return formatter.format(value);
-  } catch {
-    // Fallback formatting
-    const fixedValue = Math.abs(value).toFixed(decimals);
-    const formatted = `${symbol} ${fixedValue}`;
-    return value < 0 ? `-${formatted}` : formatted;
-  }
+  return formatCurrencyLocalized(value, currency, locale);
 }
 
+/**
+ * Format number with locale support
+ * @param value The numeric value to format
+ * @param decimals Number of decimal places
+ * @param locale The locale ('en' or 'ar')
+ * @returns Formatted number string
+ */
 export function formatNumber(
   value: number,
   decimals: number = 0,
-  locale: string = 'ar-AE'
+  locale: Locale = 'ar'
 ): string {
-  if (isNaN(value)) return '0';
-
-  try {
-    const formatter = new Intl.NumberFormat(locale, {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    });
-    return formatter.format(value);
-  } catch {
-    return value.toFixed(decimals);
-  }
+  return formatNumberLocalized(value, locale, decimals);
 }
 
+/**
+ * Format percentage with locale support
+ * Uses the locale-aware formatter from formatters.ts
+ */
 export function formatPercent(
   value: number,
   decimals: number = 2,
-  locale: string = 'ar-AE'
+  locale: Locale = 'ar'
 ): string {
-  if (isNaN(value)) return '0%';
-
-  try {
-    const formatter = new Intl.NumberFormat(locale, {
-      style: 'percent',
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    });
-    return formatter.format(value / 100);
-  } catch {
-    return `${value.toFixed(decimals)}%`;
-  }
+  const { formatPercent: formatPercentLocalized } = require('@/lib/localization/formatters');
+  return formatPercentLocalized(value, locale, decimals);
 }
 
 export function formatLargeNumber(value: number, decimals: number = 1): string {

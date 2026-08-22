@@ -37,7 +37,7 @@ export function Sidebar() {
     <div className="flex flex-col h-full bg-white dark:bg-slate-900">
       {/* Logo */}
       <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-        <h1 className="text-lg font-bold text-gray-900 dark:text-white">
+        <h1 className="text-lg font-bold text-gray-900 dark:text-white text-start">
           Accounts Dashboard
         </h1>
       </div>
@@ -58,8 +58,8 @@ export function Sidebar() {
                   : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
               }`}
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-sm font-medium">{item.label}</span>
+              <Icon className="w-5 h-5 flex-shrink-0" />
+              <span className="text-sm font-medium text-start">{item.label}</span>
             </Link>
           );
         })}

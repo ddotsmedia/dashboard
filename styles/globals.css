@@ -13,6 +13,11 @@
 
 html {
   scroll-behavior: smooth;
+  direction: ltr;
+}
+
+html[dir="rtl"] {
+  direction: rtl;
 }
 
 body {
@@ -100,4 +105,66 @@ select {
   a {
     color: blue;
   }
+}
+
+/* RTL Layout Styles using CSS Logical Properties */
+/* These properties automatically adjust based on text direction */
+
+/* Sidebar adjustments */
+[dir="rtl"] aside {
+  border-right: none;
+  border-left: 1px solid var(--color-border);
+}
+
+/* Text alignment adjustments */
+[dir="rtl"] .text-left {
+  text-align: end;
+}
+
+[dir="rtl"] .text-right {
+  text-align: start;
+}
+
+/* Flexbox direction for RTL */
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+/* Icon and text alignment in navigation */
+[dir="rtl"] nav {
+  text-align: end;
+}
+
+[dir="rtl"] .nav-item {
+  margin-inline-start: auto;
+  margin-inline-end: 0;
+  padding-inline-start: 1rem;
+  padding-inline-end: 0;
+}
+
+/* Padding and margin logical properties */
+[dir="rtl"] .p-4 {
+  padding-inline-start: 1rem;
+  padding-inline-end: 1rem;
+}
+
+[dir="rtl"] .ml-auto {
+  margin-inline-start: auto;
+  margin-inline-end: unset;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-inline-end: auto;
+  margin-inline-start: unset;
+}
+
+/* Border adjustments */
+[dir="rtl"] .border-l {
+  border-left: none;
+  border-right: 1px solid var(--color-border);
+}
+
+[dir="rtl"] .border-r {
+  border-right: none;
+  border-left: 1px solid var(--color-border);
 }

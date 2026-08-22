@@ -6,10 +6,12 @@
 'use client';
 
 import React, { memo, type ReactElement } from 'react';
+import { useLocale } from 'next-intl';
 import { Card } from '@/components/ui/Card';
 import { Sparkline } from './Sparkline';
 import { KPISkeleton } from './KPISkeleton';
-import { formatCurrency, formatNumber, formatPercent } from '@/lib/formatting/currency';
+import { formatCurrency as formatCurrencyLegacy, formatNumber as formatNumberLegacy, formatPercent as formatPercentLegacy } from '@/lib/formatting/currency';
+import { formatCurrency, formatNumber, formatPercent } from '@/lib/localization/formatters';
 import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
@@ -43,21 +45,22 @@ const SEMANTIC_COLORS: Record<string, string> = {
 function formatKPIValue(
   value: number,
   format: 'currency' | 'percentage' | 'number' = 'currency',
-  currency: 'AED' | 'USD' | 'EUR' | 'count' = 'AED'
+  currency: 'AED' | 'USD' | 'EUR' | 'count' = 'AED',
+  locale: 'en' | 'ar' = 'ar'
 ): string {
   if (currency === 'count') {
-    return formatNumber(value, 0);
+    return formatNumber(value, locale, 0);
   }
 
   switch (format) {
     case 'currency':
-      return formatCurrency(value, currency as 'AED' | 'USD' | 'EUR');
+      return formatCurrency(value, currency as 'AED' | 'USD' | 'EUR', locale);
     case 'percentage':
-      return formatPercent(value, 2);
+      return formatPercent(value, locale, 2);
     case 'number':
-      return formatNumber(value, 0);
+      return formatNumber(value, locale, 0);
     default:
-      return formatCurrency(value, currency as 'AED' | 'USD' | 'EUR');
+      return formatCurrency(value, currency as 'AED' | 'USD' | 'EUR', locale);
   }
 }
 
@@ -96,10 +99,11 @@ function getTrendIcon(
 /**
  * KPI Card Component
  * Displays:
- * - Label (left)
- * - Value (formatted, left)
- * - Change % with trend arrow (left)
- * - Sparkline chart (right)
+ * - Label (start)
+ * - Value (formatted, start)
+ * - Change % with trend arrow (start)
+ * - Sparkline chart (end)
+ * RTL-aware: Uses logical properties for direction independence
  */
 function KPICardComponent({
   label,
@@ -114,12 +118,14 @@ function KPICardComponent({
   format = 'currency',
   semanticColor,
 }: KPICardProps): ReactElement {
+  const locale = useLocale() as 'en' | 'ar';
+
   if (isLoading) {
     return <KPISkeleton />;
   }
 
   const sparklineColor = semanticColor ? SEMANTIC_COLORS[semanticColor] : '#6366F1';
-  const formattedValue = formatKPIValue(value, format, currency);
+  const formattedValue = formatKPIValue(value, format, currency, locale);
   const trendColor = getTrendColor(trend, change);
   const trendIcon = getTrendIcon(trend, change);
 
@@ -135,17 +141,17 @@ function KPICardComponent({
     >
       {/* Header: Label */}
       <div className="mb-4 flex-1">
-        <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+        <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide text-start">
           {label}
         </p>
       </div>
 
       {/* Main content: Value + Sparkline */}
       <div className="flex items-end justify-between gap-4">
-        {/* Left: Value and Change */}
+        {/* Start: Value and Change */}
         <div className="flex-1 min-w-0">
           {/* Formatted Value */}
-          <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 break-words">
+          <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 break-words text-start">
             {formattedValue}
           </p>
 
@@ -156,14 +162,14 @@ function KPICardComponent({
               <span className="font-medium">
                 {Math.abs(change).toFixed(1)}%
               </span>
-              <span className="text-xs text-gray-600 dark:text-gray-400 ml-1">
+              <span className="text-xs text-gray-600 dark:text-gray-400 ms-1">
                 {comparisonPeriod}
               </span>
             </div>
           )}
         </div>
 
-        {/* Right: Sparkline Chart */}
+        {/* End: Sparkline Chart */}
         {sparklineData && sparklineData.length > 0 && (
           <div className="flex-shrink-0">
             <Sparkline

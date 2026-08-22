@@ -16,6 +16,8 @@ export { useAlerts } from './useAlerts';
 export { useDashboardCustomization } from './useDashboardCustomization';
 export { useAIAssistant } from './useAIAssistant';
 export { useAIInsights } from './useAIInsights';
+export { useLocale } from './useLocale';
+export { useTranslation } from './useTranslation';
 
 export type { UseChartThemeReturn } from './useChartTheme';
 export type { ReceivableMetric } from './useReceivables';

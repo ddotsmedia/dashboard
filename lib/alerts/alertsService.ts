@@ -88,7 +88,7 @@ export async function getAlertsByResource(resourceType: string, resourceId?: str
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 100));
 
-  let alerts = alertsMock.filter((alert) => {
+  const alerts = alertsMock.filter((alert) => {
     const state = alertStates.get(alert.id);
     if (state?.dismissed) return false;
     if (!alert.resourceType) return false;

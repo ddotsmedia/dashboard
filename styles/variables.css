@@ -81,6 +81,9 @@
   --transition-fast: 150ms ease-in-out;
   --transition-base: 200ms ease-in-out;
   --transition-slow: 300ms ease-in-out;
+
+  /* Direction and Layout */
+  --dir: ltr;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -199,4 +202,9 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* RTL Layout Variables */
+:root[dir="rtl"] {
+  --dir: rtl;
 }

@@ -36,6 +36,8 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@formatjs/intl-datetimeformat": "^7.6.0",
+    "@formatjs/intl-numberformat": "^9.4.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.2",

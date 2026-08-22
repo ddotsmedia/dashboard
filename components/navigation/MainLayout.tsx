@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { useUI } from '@/lib/store';
+import { useDirection } from '@/lib/hooks/useDirection';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -11,14 +12,23 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const { sidebarOpen } = useUI();
+  const direction = useDirection();
 
   return (
-    <div className="flex h-screen bg-white dark:bg-slate-900">
+    <div
+      className={`flex h-screen bg-white dark:bg-slate-900 ${
+        direction === 'rtl' ? 'flex-row-reverse' : 'flex-row'
+      }`}
+    >
       {/* Sidebar */}
       <aside
         className={`${
           sidebarOpen ? 'w-64 md:w-64' : 'w-0 md:w-64'
-        } transition-all duration-300 overflow-hidden border-r border-gray-200 dark:border-gray-700`}
+        } transition-all duration-300 overflow-hidden ${
+          direction === 'rtl'
+            ? 'border-l border-gray-200 dark:border-gray-700'
+            : 'border-r border-gray-200 dark:border-gray-700'
+        }`}
       >
         <Sidebar />
       </aside>

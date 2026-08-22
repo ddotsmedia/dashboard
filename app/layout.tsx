@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import '@/styles/globals.css';
 import '@/styles/variables.css';
-import { QueryProvider } from '@/components/providers/QueryProvider';
-import { AIAssistantPanel } from '@/components/ai/AIAssistantPanel';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -24,14 +22,5 @@ interface LayoutProps {
 }
 
 export default function RootLayout({ children }: LayoutProps) {
-  return (
-    <html lang="en" suppressHydrationWarning data-theme="light">
-      <body className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50">
-        <QueryProvider>
-          {children}
-          <AIAssistantPanel />
-        </QueryProvider>
-      </body>
-    </html>
-  );
+  return children;
 }

@@ -10,6 +10,7 @@ import { ComparisonSelector } from './selectors/ComparisonSelector';
 import { CurrencySelector } from './selectors/CurrencySelector';
 import { RoleSelector } from '@/components/dashboard/RoleSelector';
 import { RoleInfo } from '@/components/dashboard/RoleInfo';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { ThemeSwitcher } from './header/ThemeSwitcher';
 import { SearchButton } from './header/SearchButton';
 import { NotificationsBell } from './header/NotificationsBell';
@@ -18,11 +19,28 @@ import { UserMenu } from './header/UserMenu';
 import { useIsMobile } from '@/lib/responsive';
 import { CustomizeModal } from '@/components/dashboard/CustomizeModal';
 
+// Default locale if next-intl is not configured yet
+const DEFAULT_LOCALE = 'en' as const;
+
 export function Header() {
   const { sidebarOpen, toggleSidebar, toggleAIAssistant } = useUI();
   const { currentRole } = useAuth();
   const isMobile = useIsMobile();
   const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
+  const [currentLocale, setCurrentLocale] = useState<'en' | 'ar'>(DEFAULT_LOCALE);
+
+  // Initialize locale from localStorage or detect from browser
+  useEffect(() => {
+    const savedLocale = localStorage.getItem('locale') as 'en' | 'ar' | null;
+    if (savedLocale) {
+      setCurrentLocale(savedLocale);
+    } else {
+      // Detect from browser language
+      const browserLang = navigator.language.startsWith('ar') ? 'ar' : 'en';
+      setCurrentLocale(browserLang);
+      localStorage.setItem('locale', browserLang);
+    }
+  }, []);
 
   // Keyboard shortcut: Cmd+Shift+A to toggle AI Assistant
   useEffect(() => {
@@ -36,6 +54,12 @@ export function Header() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [toggleAIAssistant]);
+
+  // Handle locale change
+  const handleLocaleChange = (newLocale: 'en' | 'ar') => {
+    setCurrentLocale(newLocale);
+    localStorage.setItem('locale', newLocale);
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
@@ -91,6 +115,10 @@ export function Header() {
             <RoleSelector currentRole={currentRole} />
             <RoleInfo role={currentRole} />
           </div>
+          <LanguageSwitcher
+            currentLocale={currentLocale}
+            onLocaleChange={handleLocaleChange}
+          />
           <ThemeSwitcher />
           <UserMenu />
         </div>

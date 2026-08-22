@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState, useCallback } from 'react';
+import { useLocale } from 'next-intl';
 import {
   flexRender,
   getCoreRowModel,
@@ -235,7 +236,7 @@ export function TransactionsTable() {
           const amount = row.getValue('amount') as number;
           const currency = (row.original.currency || 'AED') as 'AED' | 'USD' | 'EUR';
           return (
-            <span className="text-sm font-semibold text-gray-900 dark:text-white text-right">
+            <span className="text-sm font-semibold text-gray-900 dark:text-white text-end">
               {formatCurrency(amount, currency)}
             </span>
           );
@@ -441,7 +442,7 @@ export function TransactionsTable() {
                     <th
                       key={header.id}
                       style={{ width: header.getSize() }}
-                      className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300 text-sm whitespace-nowrap"
+                      className="px-4 py-3 text-start font-medium text-gray-700 dark:text-gray-300 text-sm whitespace-nowrap"
                     >
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </th>
