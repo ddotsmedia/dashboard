@@ -13,8 +13,19 @@ import type {
   Transaction,
   CashFlowData,
 } from '@/types/dashboard';
+import type {
+  ARAgingChartData,
+  APAgingChartData,
+  RevenueExpenseChartData,
+  CashFlowChartData,
+  ExpenseBreakdownData,
+} from './dashboardService';
 import type { DashboardFilters } from '@/types/api';
-import { mockDashboardData } from '@/data/mock/dashboardData';
+import {
+  mockDashboardData,
+  arAgingChartData,
+  apAgingChartData,
+} from '@/data/mock/dashboardData';
 
 export class MockDashboardService implements IDashboardService {
   async getDashboardSummary(_filters: DashboardFilters): Promise<DashboardSummary> {
@@ -98,5 +109,50 @@ export class MockDashboardService implements IDashboardService {
   async getAIInsights(_filters: DashboardFilters): Promise<AIInsight[]> {
     await new Promise((resolve) => setTimeout(resolve, 100));
     return [];
+  }
+
+  async getRevenueExpenseChartData(
+    _filters: DashboardFilters
+  ): Promise<RevenueExpenseChartData[]> {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return mockDashboardData.historicalData.map((item) => ({
+      date: item.month,
+      revenue: item.revenue,
+      expenses: item.expenses,
+      profit: item.profit,
+    }));
+  }
+
+  async getCashFlowChartData(
+    _filters: DashboardFilters
+  ): Promise<CashFlowChartData[]> {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return [
+      { category: 'Operating', value: 1245000 },
+      { category: 'Investing', value: 180000 },
+      { category: 'Financing', value: 95300 },
+    ];
+  }
+
+  async getExpenseBreakdownData(): Promise<ExpenseBreakdownData[]> {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return [
+      { name: 'Cost of Goods Sold', value: 485200 },
+      { name: 'Salaries & Wages', value: 285600 },
+      { name: 'Operating Expenses', value: 189300 },
+      { name: 'Marketing & Sales', value: 156400 },
+      { name: 'Utilities & Rent', value: 98200 },
+      { name: 'Other Expenses', value: 69620 },
+    ];
+  }
+
+  async getARAgingChartData(_filters: DashboardFilters): Promise<ARAgingChartData[]> {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return arAgingChartData;
+  }
+
+  async getAPAgingChartData(_filters: DashboardFilters): Promise<APAgingChartData[]> {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return apAgingChartData;
   }
 }

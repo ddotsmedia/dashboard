@@ -588,6 +588,212 @@ export const profitabilityMetricsMock: ProfitabilityMetric = {
 };
 
 /**
+ * AR Aging Chart Data
+ * 12 months of AR aging bucket history
+ */
+export const arAgingChartData = [
+  {
+    month: 'Sep 2023',
+    current: 245300,
+    d1_30: 68900,
+    d31_60: 35600,
+    d61_90: 18200,
+    d90plus: 8600,
+  },
+  {
+    month: 'Oct 2023',
+    current: 258700,
+    d1_30: 72100,
+    d31_60: 38900,
+    d61_90: 19800,
+    d90plus: 7200,
+  },
+  {
+    month: 'Nov 2023',
+    current: 272400,
+    d1_30: 75600,
+    d31_60: 41200,
+    d61_90: 21500,
+    d90plus: 6800,
+  },
+  {
+    month: 'Dec 2023',
+    current: 285700,
+    d1_30: 79200,
+    d31_60: 43800,
+    d61_90: 23100,
+    d90plus: 6300,
+  },
+  {
+    month: 'Jan 2024',
+    current: 268900,
+    d1_30: 74600,
+    d31_60: 40500,
+    d61_90: 21800,
+    d90plus: 7200,
+  },
+  {
+    month: 'Feb 2024',
+    current: 252100,
+    d1_30: 70300,
+    d31_60: 38200,
+    d61_90: 20600,
+    d90plus: 8400,
+  },
+  {
+    month: 'Mar 2024',
+    current: 276800,
+    d1_30: 76900,
+    d31_60: 42100,
+    d61_90: 22700,
+    d90plus: 7200,
+  },
+  {
+    month: 'Apr 2024',
+    current: 265300,
+    d1_30: 73500,
+    d31_60: 40200,
+    d61_90: 21900,
+    d90plus: 7800,
+  },
+  {
+    month: 'May 2024',
+    current: 278200,
+    d1_30: 77300,
+    d31_60: 42600,
+    d61_90: 23200,
+    d90plus: 6900,
+  },
+  {
+    month: 'Jun 2024',
+    current: 282100,
+    d1_30: 78200,
+    d31_60: 43400,
+    d61_90: 23800,
+    d90plus: 6700,
+  },
+  {
+    month: 'Jul 2024',
+    current: 283400,
+    d1_30: 78600,
+    d31_60: 43700,
+    d61_90: 24100,
+    d90plus: 6400,
+  },
+  {
+    month: 'Aug 2024',
+    current: 285700,
+    d1_30: 98400,
+    d31_60: 56200,
+    d61_90: 15900,
+    d90plus: 0,
+  },
+];
+
+/**
+ * AP Aging Chart Data
+ * 12 months of AP aging bucket history
+ */
+export const apAgingChartData = [
+  {
+    month: 'Sep 2023',
+    current: 135600,
+    d1_30: 38900,
+    d31_60: 12800,
+    d61_90: 4200,
+    d90plus: 2100,
+  },
+  {
+    month: 'Oct 2023',
+    current: 142300,
+    d1_30: 40800,
+    d31_60: 13600,
+    d61_90: 4500,
+    d90plus: 1900,
+  },
+  {
+    month: 'Nov 2023',
+    current: 149800,
+    d1_30: 42900,
+    d31_60: 14300,
+    d61_90: 4800,
+    d90plus: 1900,
+  },
+  {
+    month: 'Dec 2023',
+    current: 156230,
+    d1_30: 44700,
+    d31_60: 14900,
+    d61_90: 5100,
+    d90plus: 1700,
+  },
+  {
+    month: 'Jan 2024',
+    current: 148200,
+    d1_30: 42500,
+    d31_60: 14200,
+    d61_90: 4900,
+    d90plus: 1800,
+  },
+  {
+    month: 'Feb 2024',
+    current: 140600,
+    d1_30: 40300,
+    d31_60: 13500,
+    d61_90: 4600,
+    d90plus: 1900,
+  },
+  {
+    month: 'Mar 2024',
+    current: 152700,
+    d1_30: 43800,
+    d31_60: 14600,
+    d61_90: 5000,
+    d90plus: 1700,
+  },
+  {
+    month: 'Apr 2024',
+    current: 146300,
+    d1_30: 41900,
+    d31_60: 14000,
+    d61_90: 4800,
+    d90plus: 1900,
+  },
+  {
+    month: 'May 2024',
+    current: 153900,
+    d1_30: 44100,
+    d31_60: 14700,
+    d61_90: 5100,
+    d90plus: 1700,
+  },
+  {
+    month: 'Jun 2024',
+    current: 157200,
+    d1_30: 45000,
+    d31_60: 15000,
+    d61_90: 5200,
+    d90plus: 1600,
+  },
+  {
+    month: 'Jul 2024',
+    current: 158600,
+    d1_30: 45400,
+    d31_60: 15100,
+    d61_90: 5300,
+    d90plus: 1600,
+  },
+  {
+    month: 'Aug 2024',
+    current: 156230,
+    d1_30: 52100,
+    d31_60: 18240,
+    d61_90: 7997,
+    d90plus: 0,
+  },
+];
+
+/**
  * Export all mock data as a collection
  */
 export const mockDataService = {
@@ -601,6 +807,8 @@ export const mockDataService = {
   financialRatiosMock,
   cashFlowDataMock,
   profitabilityMetricsMock,
+  arAgingChartData,
+  apAgingChartData,
 };
 
 /**
