@@ -9,10 +9,8 @@ import { useEffect, useRef, memo, type ReactElement } from 'react';
 import * as echarts from 'echarts';
 import type { EChartsOption } from 'echarts';
 import { formatCurrency } from '@/lib/formatting/currency';
-import type { DashboardFilters } from '@/types/api';
 
 interface ARAgingChartProps {
-  filters?: DashboardFilters;
   data?: Array<{
     month: string;
     current: number;
@@ -34,15 +32,23 @@ const AGING_COLORS = {
   d90plus: '#991B1B',    // Dark Red
 };
 
+interface TooltipParam {
+  axisValue: string;
+  seriesName: string;
+  value: number;
+  color: string;
+}
+
 /**
  * Format tooltip content
  */
-function formatTooltip(params: any): string {
+function formatTooltip(params: unknown): string {
   if (!Array.isArray(params)) return '';
 
-  let tooltip = `<div style="font-weight: 600; margin-bottom: 8px;">${params[0]?.axisValue}</div>`;
+  const typedParams = params as TooltipParam[];
+  let tooltip = `<div style="font-weight: 600; margin-bottom: 8px;">${typedParams[0]?.axisValue}</div>`;
 
-  params.forEach((item: any) => {
+  typedParams.forEach((item) => {
     tooltip += `
       <div style="color: ${item.color}; margin-bottom: 4px;">
         ${item.seriesName}: ${formatCurrency(item.value, 'AED')}
@@ -58,7 +64,6 @@ function formatTooltip(params: any): string {
  * Displays stacked bar chart of aging receivables over 12 months
  */
 function ARAgingChartComponent({
-  filters,
   data,
 }: ARAgingChartProps): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);

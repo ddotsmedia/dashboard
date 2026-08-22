@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { EChartsOption } from 'echarts';
 import { getChartTheme, detectDarkMode, watchThemeChange } from '@/lib/charts/theme';
 import { useUI } from '@/lib/store';
@@ -20,6 +20,22 @@ export interface UseChartThemeReturn {
 }
 
 /**
+ * Determine if dark mode should be active based on theme setting
+ */
+function calculateDarkMode(uiTheme: string): boolean {
+  if (uiTheme === 'light') {
+    return false;
+  }
+
+  if (uiTheme === 'dark') {
+    return true;
+  }
+
+  // Fall back to system detection (system preference or data-theme attribute)
+  return detectDarkMode();
+}
+
+/**
  * Hook that provides ECharts theme based on current mode
  * Automatically watches for theme changes from:
  * - Zustand UI store
@@ -28,49 +44,44 @@ export interface UseChartThemeReturn {
  */
 export function useChartTheme(): UseChartThemeReturn {
   const { theme: uiTheme } = useUI();
-  const [isDark, setIsDark] = useState<boolean>(false);
-  const [mounted, setMounted] = useState<boolean>(false);
+  const unwatchRef = useRef<(() => void) | null>(null);
+  const prevThemeRef = useRef<string>(uiTheme);
 
-  // Determine if dark mode should be active
-  const calculateDarkMode = useCallback((): boolean => {
-    // Explicit theme from UI store takes precedence
-    if (uiTheme === 'light') {
-      return false;
+  // Track system theme changes to trigger re-renders
+  const [, setSystemThemeChanged] = useState(false);
+
+  // Set up watchers for external theme changes
+  useEffect(() => {
+    // Only set up watcher if theme changed
+    if (prevThemeRef.current !== uiTheme) {
+      prevThemeRef.current = uiTheme;
+
+      // Clean up previous watcher
+      if (unwatchRef.current) {
+        unwatchRef.current();
+        unwatchRef.current = null;
+      }
+
+      // Only set up external watcher if theme is 'system'
+      if (uiTheme === 'system') {
+        unwatchRef.current = watchThemeChange(() => {
+          // Trigger re-render when system theme changes
+          setSystemThemeChanged((prev) => !prev);
+        });
+      }
     }
 
-    if (uiTheme === 'dark') {
-      return true;
-    }
-
-    // Fall back to system detection (system preference or data-theme attribute)
-    return detectDarkMode();
+    return () => {
+      if (unwatchRef.current) {
+        unwatchRef.current();
+        unwatchRef.current = null;
+      }
+    };
   }, [uiTheme]);
 
-  // Initialize dark mode on mount
-  useEffect(() => {
-    setIsDark(calculateDarkMode());
-    setMounted(true);
-  }, [calculateDarkMode]);
-
-  // Watch for theme changes
-  useEffect(() => {
-    if (!mounted) {
-      return;
-    }
-
-    // Update when UI theme changes
-    setIsDark(calculateDarkMode());
-
-    // Set up listener for system/data-theme attribute changes
-    const unwatch = watchThemeChange((newDarkMode: boolean) => {
-      // Only update if UI theme is 'system'
-      if (uiTheme === 'system') {
-        setIsDark(newDarkMode);
-      }
-    });
-
-    return unwatch;
-  }, [uiTheme, mounted, calculateDarkMode]);
+  // Calculate the current dark mode based on uiTheme
+  // This will recompute when uiTheme changes or system theme changes
+  const isDark = calculateDarkMode(uiTheme);
 
   // Get the appropriate theme object
   const theme = getChartTheme(isDark);
@@ -87,44 +98,49 @@ export function useChartTheme(): UseChartThemeReturn {
  */
 export function useDarkMode(): boolean {
   const { theme: uiTheme } = useUI();
-  const [isDark, setIsDark] = useState<boolean>(false);
-  const [mounted, setMounted] = useState<boolean>(false);
+  const unwatchRef = useRef<(() => void) | null>(null);
+  const prevThemeRef = useRef<string>(uiTheme);
+  const [systemIsDark, setSystemIsDark] = useState<boolean>(() =>
+    detectDarkMode()
+  );
 
-  // Determine if dark mode should be active
-  const calculateDarkMode = useCallback((): boolean => {
-    if (uiTheme === 'light') {
-      return false;
+  // Set up watchers for external theme changes
+  useEffect(() => {
+    // Only set up watcher if theme changed
+    if (prevThemeRef.current !== uiTheme) {
+      prevThemeRef.current = uiTheme;
+
+      // Clean up previous watcher
+      if (unwatchRef.current) {
+        unwatchRef.current();
+        unwatchRef.current = null;
+      }
+
+      // Only set up external watcher if theme is 'system'
+      if (uiTheme === 'system') {
+        unwatchRef.current = watchThemeChange((newDarkMode: boolean) => {
+          setSystemIsDark(newDarkMode);
+        });
+      }
     }
 
-    if (uiTheme === 'dark') {
-      return true;
-    }
-
-    return detectDarkMode();
+    return () => {
+      if (unwatchRef.current) {
+        unwatchRef.current();
+        unwatchRef.current = null;
+      }
+    };
   }, [uiTheme]);
 
-  // Initialize on mount
-  useEffect(() => {
-    setIsDark(calculateDarkMode());
-    setMounted(true);
-  }, [calculateDarkMode]);
+  // Calculate based on UI theme, falling back to system preference only when needed
+  if (uiTheme === 'light') {
+    return false;
+  }
 
-  // Watch for changes
-  useEffect(() => {
-    if (!mounted) {
-      return;
-    }
+  if (uiTheme === 'dark') {
+    return true;
+  }
 
-    setIsDark(calculateDarkMode());
-
-    const unwatch = watchThemeChange((newDarkMode: boolean) => {
-      if (uiTheme === 'system') {
-        setIsDark(newDarkMode);
-      }
-    });
-
-    return unwatch;
-  }, [uiTheme, mounted, calculateDarkMode]);
-
-  return isDark;
+  // System theme - use the watched system value
+  return systemIsDark;
 }

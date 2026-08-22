@@ -119,6 +119,7 @@ export function ChartsSection({
                 profit: item.profit,
                 cashFlow: item.profit * 0.85,
               }))}
+              height={384}
             />
           )}
         </ChartContainer>
