@@ -40,11 +40,13 @@ export interface Transaction {
   id: string;
   date: Date;
   description: string;
-  type: 'revenue' | 'expense' | 'transfer' | 'payment' | 'receipt';
+  type: 'revenue' | 'expense' | 'transfer' | 'payment' | 'receipt' | 'debit' | 'credit';
   amount: number;
   category: string;
-  status: 'draft' | 'posted' | 'reconciled';
+  status: 'draft' | 'posted' | 'reconciled' | 'Draft' | 'Posted' | 'Reconciled';
   reference?: string;
+  account?: string;
+  currency?: 'AED' | 'USD' | 'EUR';
   notes?: string;
 }
 
@@ -99,12 +101,16 @@ export interface SupplierBalance {
 
 export interface Alert {
   id: string;
-  type: 'critical' | 'warning' | 'attention' | 'info';
+  type?: 'critical' | 'warning' | 'attention' | 'info';
+  severity?: 'CRITICAL' | 'WARNING' | 'ATTENTION' | 'INFO';
   title: string;
   description: string;
   timestamp: Date;
   actionUrl?: string;
   actionLabel?: string;
+  resourceType?: string;
+  resourceId?: string;
+  read?: boolean;
   dismissed?: boolean;
 }
 

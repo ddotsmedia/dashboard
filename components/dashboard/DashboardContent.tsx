@@ -11,6 +11,8 @@ import { APWidget } from './payables/APWidget';
 import { CashFlowWidget } from './cash-flow/CashFlowWidget';
 import { ChartsSection } from './ChartsSection';
 import { AnalyticsSection } from './analytics';
+import { TransactionsSection } from './transactions';
+import { AlertPanel } from './alerts';
 
 export function DashboardContent() {
   return (
@@ -54,6 +56,21 @@ export function DashboardContent() {
 
       {/* Charts Section */}
       <ChartsSection />
+
+      {/* Bottom Section - Transactions & Alerts */}
+      <section>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Transactions Section - 2/3 width on desktop */}
+          <div className="lg:col-span-2">
+            <TransactionsSection />
+          </div>
+
+          {/* Alerts Panel - 1/3 width on desktop */}
+          <div className="lg:col-span-1">
+            <AlertPanel />
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

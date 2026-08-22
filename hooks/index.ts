@@ -11,6 +11,8 @@ export { useCashFlow } from './useCashFlow';
 export { useExpenses } from './useExpenses';
 export { useBudget } from './useBudget';
 export { useProfitability } from './useProfitability';
+export { useTransactions } from './useTransactions';
+export { useAlerts } from './useAlerts';
 
 export type { UseChartThemeReturn } from './useChartTheme';
 export type { ReceivableMetric } from './useReceivables';
@@ -19,3 +21,5 @@ export type { CashFlowData } from './useCashFlow';
 export type { ExpenseMetric } from './useExpenses';
 export type { BudgetItem } from './useBudget';
 export type { ProfitabilityItem } from './useProfitability';
+export type { UseTransactionsReturn } from './useTransactions';
+export type { UseAlertsReturn } from './useAlerts';

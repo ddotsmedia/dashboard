@@ -58,7 +58,7 @@ export interface ExpenseBreakdownData {
 
 export interface IDashboardService {
   getDashboardSummary(filters: DashboardFilters): Promise<DashboardSummary>;
-  getTransactions(filters: DashboardFilters): Promise<Transaction[]>;
+  getTransactions(filters?: DashboardFilters): Promise<Transaction[]>;
   getReceivables(filters: DashboardFilters): Promise<ReceivableMetric>;
   getPayables(filters: DashboardFilters): Promise<PayableMetric>;
   getCashFlow(filters: DashboardFilters): Promise<CashFlowData>;
@@ -70,6 +70,8 @@ export interface IDashboardService {
   getExpenseTrends(): Promise<TrendData[]>;
   getTopExpenseCategories(): Promise<CategoryRanking[]>;
   getAlerts(): Promise<Alert[]>;
+  dismissAlert(alertId: string): Promise<void>;
+  markAlertAsRead(alertId: string): Promise<void>;
   getAIInsights(filters: DashboardFilters): Promise<AIInsight[]>;
   getRevenueExpenseChartData(filters: DashboardFilters): Promise<RevenueExpenseChartData[]>;
   getCashFlowChartData(filters: DashboardFilters): Promise<CashFlowChartData[]>;

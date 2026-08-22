@@ -42,18 +42,41 @@ import {
   expenseTrends,
   topExpenseCategories,
 } from '@/data/mock/expensesData';
+import { transactionsData } from '@/data/mock/transactionsData';
+import { alertsData } from '@/data/mock/alertsData';
+
+/**
+ * In-memory store for mutable alert state (dismissed, read)
+ */
+const alertStateStore = new Map<string, { dismissed: boolean; read: boolean }>();
+
+/**
+ * Initialize alert state store from immutable alertsData
+ */
+function initializeAlertState(): void {
+  if (alertStateStore.size === 0) {
+    alertsData.forEach((alert) => {
+      alertStateStore.set(alert.id, {
+        dismissed: alert.dismissed || false,
+        read: alert.read || false,
+      });
+    });
+  }
+}
 
 export class MockDashboardService implements IDashboardService {
+  constructor() {
+    initializeAlertState();
+  }
   async getDashboardSummary(_filters: DashboardFilters): Promise<DashboardSummary> {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 100));
     return mockDashboardData;
   }
 
-  async getTransactions(_filters: DashboardFilters): Promise<Transaction[]> {
+  async getTransactions(_filters?: DashboardFilters): Promise<Transaction[]> {
     await new Promise((resolve) => setTimeout(resolve, 100));
-    // Return mock transactions
-    return [];
+    return transactionsData;
   }
 
   async getReceivables(_filters: DashboardFilters): Promise<ReceivableMetric> {
@@ -257,7 +280,31 @@ export class MockDashboardService implements IDashboardService {
 
   async getAlerts(): Promise<Alert[]> {
     await new Promise((resolve) => setTimeout(resolve, 100));
-    return [];
+    // Return alerts with current state from store
+    return alertsData.map((alert) => {
+      const state = alertStateStore.get(alert.id);
+      return {
+        ...alert,
+        dismissed: state?.dismissed ?? alert.dismissed,
+        read: state?.read ?? alert.read,
+      };
+    });
+  }
+
+  async dismissAlert(alertId: string): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    const state = alertStateStore.get(alertId);
+    if (state) {
+      state.dismissed = true;
+    }
+  }
+
+  async markAlertAsRead(alertId: string): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    const state = alertStateStore.get(alertId);
+    if (state) {
+      state.read = true;
+    }
   }
 
   async getAIInsights(_filters: DashboardFilters): Promise<AIInsight[]> {
