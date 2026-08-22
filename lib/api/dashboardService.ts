@@ -64,6 +64,8 @@ export interface IDashboardService {
   getExpenseBreakdownData(): Promise<ExpenseBreakdownData[]>;
   getARAgingChartData(filters: DashboardFilters): Promise<ARAgingChartData[]>;
   getAPAgingChartData(filters: DashboardFilters): Promise<APAgingChartData[]>;
+  getARTopDebtors(): Promise<Array<{ id: string; name: string; amount: number; daysOverdue: number }>>;
+  getAPTopSuppliers(): Promise<Array<{ id: string; name: string; amount: number; daysDue: number }>>;
 }
 
 // Service instance will be created in index.ts
