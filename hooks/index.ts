@@ -8,8 +8,14 @@ export { useChartTheme, useDarkMode } from './useChartTheme';
 export { useReceivables } from './useReceivables';
 export { usePayables } from './usePayables';
 export { useCashFlow } from './useCashFlow';
+export { useExpenses } from './useExpenses';
+export { useBudget } from './useBudget';
+export { useProfitability } from './useProfitability';
 
 export type { UseChartThemeReturn } from './useChartTheme';
 export type { ReceivableMetric } from './useReceivables';
 export type { PayableMetric } from './usePayables';
 export type { CashFlowData } from './useCashFlow';
+export type { ExpenseMetric } from './useExpenses';
+export type { BudgetItem } from './useBudget';
+export type { ProfitabilityItem } from './useProfitability';

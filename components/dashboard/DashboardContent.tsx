@@ -10,6 +10,7 @@ import { ARWidget } from './receivables/ARWidget';
 import { APWidget } from './payables/APWidget';
 import { CashFlowWidget } from './cash-flow/CashFlowWidget';
 import { ChartsSection } from './ChartsSection';
+import { AnalyticsSection } from './analytics';
 
 export function DashboardContent() {
   return (
@@ -47,6 +48,9 @@ export function DashboardContent() {
           <CashFlowWidget />
         </div>
       </section>
+
+      {/* Analytics Section - Budget, Profitability, Expenses */}
+      <AnalyticsSection />
 
       {/* Charts Section */}
       <ChartsSection />

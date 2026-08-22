@@ -179,3 +179,52 @@ export interface ProfitabilityTrend {
   profit: number;
   margin: number;
 }
+
+export interface ProfitabilityItem {
+  id: string;
+  name: string;
+  dimension: 'company' | 'branch' | 'department' | 'product' | 'customer';
+  revenue: number;
+  grossProfit: number;
+  netProfit: number;
+  margin: number;
+  changePercent?: number;
+  trend?: 'up' | 'down' | 'stable';
+}
+
+export interface ExpenseCategory {
+  id: string;
+  category: string;
+  amount: number;
+  percentage: number;
+  color?: string;
+  trend?: number;
+}
+
+export interface DepartmentExpense {
+  id: string;
+  department: string;
+  amount: number;
+  percentage: number;
+  budget?: number;
+  variance?: number;
+  variancePercent?: number;
+  trend?: number;
+}
+
+export interface TrendData {
+  period: string;
+  value: number;
+  previousValue?: number;
+  change?: number;
+  changePercent?: number;
+}
+
+export interface CategoryRanking {
+  rank: number;
+  category: string;
+  amount: number;
+  percentage: number;
+  trend: 'up' | 'down' | 'stable';
+  changePercent: number;
+}

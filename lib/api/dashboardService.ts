@@ -12,6 +12,12 @@ import type {
   BudgetItem,
   Transaction,
   CashFlowData,
+  ProfitabilityItem,
+  ProfitabilityMetric,
+  ExpenseCategory,
+  DepartmentExpense,
+  TrendData,
+  CategoryRanking,
 } from '@/types/dashboard';
 import type { DashboardFilters } from '@/types/api';
 
@@ -57,6 +63,12 @@ export interface IDashboardService {
   getPayables(filters: DashboardFilters): Promise<PayableMetric>;
   getCashFlow(filters: DashboardFilters): Promise<CashFlowData>;
   getBudgets(filters: DashboardFilters): Promise<BudgetItem[]>;
+  getProfitability(dimension: string, filters: DashboardFilters): Promise<ProfitabilityItem[]>;
+  getExpenses(filters: DashboardFilters): Promise<ExpenseCategory[]>;
+  getExpenseBreakdown(): Promise<ExpenseCategory[]>;
+  getDepartmentExpenses(): Promise<DepartmentExpense[]>;
+  getExpenseTrends(): Promise<TrendData[]>;
+  getTopExpenseCategories(): Promise<CategoryRanking[]>;
   getAlerts(): Promise<Alert[]>;
   getAIInsights(filters: DashboardFilters): Promise<AIInsight[]>;
   getRevenueExpenseChartData(filters: DashboardFilters): Promise<RevenueExpenseChartData[]>;
