@@ -14,6 +14,8 @@ export { useProfitability } from './useProfitability';
 export { useTransactions } from './useTransactions';
 export { useAlerts } from './useAlerts';
 export { useDashboardCustomization } from './useDashboardCustomization';
+export { useAIAssistant } from './useAIAssistant';
+export { useAIInsights } from './useAIInsights';
 
 export type { UseChartThemeReturn } from './useChartTheme';
 export type { ReceivableMetric } from './useReceivables';
@@ -25,3 +27,4 @@ export type { ProfitabilityItem } from './useProfitability';
 export type { UseTransactionsReturn } from './useTransactions';
 export type { UseAlertsReturn } from './useAlerts';
 export type { DashboardCustomizationReturn } from './useDashboardCustomization';
+export type { ChatMessage, UseAIAssistantReturn } from './useAIAssistant';

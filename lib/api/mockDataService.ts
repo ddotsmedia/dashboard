@@ -44,6 +44,7 @@ import {
 } from '@/data/mock/expensesData';
 import { transactionsData } from '@/data/mock/transactionsData';
 import { alertsData } from '@/data/mock/alertsData';
+import { aiInsightsData } from '@/data/mock/aiInsightsData';
 
 /**
  * In-memory store for mutable alert state (dismissed, read)
@@ -309,7 +310,7 @@ export class MockDashboardService implements IDashboardService {
 
   async getAIInsights(_filters: DashboardFilters): Promise<AIInsight[]> {
     await new Promise((resolve) => setTimeout(resolve, 100));
-    return [];
+    return aiInsightsData;
   }
 
   async getRevenueExpenseChartData(

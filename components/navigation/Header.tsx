@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useUI } from '@/lib/store';
 import { Menu, X, Sliders } from 'lucide-react';
 import { CompanySelector } from './selectors/CompanySelector';
@@ -11,14 +11,28 @@ import { CurrencySelector } from './selectors/CurrencySelector';
 import { ThemeSwitcher } from './header/ThemeSwitcher';
 import { SearchButton } from './header/SearchButton';
 import { NotificationsBell } from './header/NotificationsBell';
+import { AIAssistantButton } from './header/AIAssistantButton';
 import { UserMenu } from './header/UserMenu';
 import { useIsMobile } from '@/lib/responsive';
 import { CustomizeModal } from '@/components/dashboard/CustomizeModal';
 
 export function Header() {
-  const { sidebarOpen, toggleSidebar } = useUI();
+  const { sidebarOpen, toggleSidebar, toggleAIAssistant } = useUI();
   const isMobile = useIsMobile();
   const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
+
+  // Keyboard shortcut: Cmd+Shift+A to toggle AI Assistant
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'A') {
+        e.preventDefault();
+        toggleAIAssistant();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [toggleAIAssistant]);
 
   return (
     <header className="sticky top-0 z-40 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
@@ -62,6 +76,7 @@ export function Header() {
           </div>
           <SearchButton />
           <NotificationsBell />
+          <AIAssistantButton />
           <button
             onClick={() => setIsCustomizeModalOpen(true)}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"

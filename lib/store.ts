@@ -35,9 +35,12 @@ export interface UISlice {
   sidebarOpen: boolean;
   theme: 'light' | 'dark' | 'system';
   notifications: Notification[];
+  aiAssistantOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
   toggleSidebar: () => void;
+  toggleAIAssistant: () => void;
+  setAIAssistantOpen: (open: boolean) => void;
   addNotification: (notification: Omit<Notification, 'id' | 'timestamp'>) => void;
   removeNotification: (id: string) => void;
   clearNotifications: () => void;
@@ -172,9 +175,12 @@ export const useStore = create<Store>()(
       sidebarOpen: true,
       theme: 'system',
       notifications: [],
+      aiAssistantOpen: false,
       setSidebarOpen: (sidebarOpen) => set({ sidebarOpen }),
       setTheme: (theme) => set({ theme }),
       toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+      toggleAIAssistant: () => set((state) => ({ aiAssistantOpen: !state.aiAssistantOpen })),
+      setAIAssistantOpen: (aiAssistantOpen) => set({ aiAssistantOpen }),
       addNotification: (notification) =>
         set((state) => ({
           notifications: [
@@ -276,6 +282,7 @@ export const useStore = create<Store>()(
         widgetOrder: state.widgetOrder,
         widgetSizes: state.widgetSizes,
         savedLayouts: state.savedLayouts,
+        aiAssistantOpen: state.aiAssistantOpen,
       }),
     }
   )
@@ -304,9 +311,12 @@ export const useUI = () =>
     sidebarOpen: state.sidebarOpen,
     theme: state.theme,
     notifications: state.notifications,
+    aiAssistantOpen: state.aiAssistantOpen,
     setSidebarOpen: state.setSidebarOpen,
     setTheme: state.setTheme,
     toggleSidebar: state.toggleSidebar,
+    toggleAIAssistant: state.toggleAIAssistant,
+    setAIAssistantOpen: state.setAIAssistantOpen,
     addNotification: state.addNotification,
     removeNotification: state.removeNotification,
     clearNotifications: state.clearNotifications,
