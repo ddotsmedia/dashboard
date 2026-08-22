@@ -2,10 +2,12 @@
 
 import { useFilters } from '@/lib/store';
 import { useCallback } from 'react';
+import { useIsMobile } from '@/lib/responsive';
 import { format } from 'date-fns';
 
 export function DateRangeSelector() {
   const { dateRange, setDateRange } = useFilters();
+  const isMobile = useIsMobile();
 
   const presets = [
     {
@@ -69,12 +71,21 @@ export function DateRangeSelector() {
   );
 
   const formatRange = () => {
+    if (isMobile) {
+      // Short format for mobile
+      return `${format(dateRange.startDate, 'MMM dd')} - ${format(dateRange.endDate, 'MMM dd')}`;
+    }
     return `${format(dateRange.startDate, 'MMM dd')} - ${format(dateRange.endDate, 'MMM dd, yyyy')}`;
   };
 
+  // Responsive sizing
+  const containerClass = isMobile ? 'w-full flex flex-col gap-2' : 'flex items-center gap-2';
+  const labelClass = isMobile ? 'text-xs font-medium text-gray-600 dark:text-gray-400 px-1' : 'text-sm font-medium text-gray-700 dark:text-gray-300';
+  const selectClass = isMobile ? 'w-full px-3 py-2.5 text-sm' : 'px-3 py-2 text-sm';
+
   return (
-    <div className="flex items-center gap-2">
-      <div className="text-sm font-medium text-gray-700">
+    <div className={containerClass}>
+      <div className={labelClass}>
         {formatRange()}
       </div>
       <select
@@ -82,7 +93,8 @@ export function DateRangeSelector() {
           const preset = presets.find((p) => p.label === e.target.value);
           if (preset) handlePreset(preset);
         }}
-        className="px-3 py-2 border border-gray-300 rounded-md text-sm bg-white hover:border-gray-400 transition-colors"
+        className={`${selectClass} ${isMobile ? 'w-full' : 'w-auto'} border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-slate-700 text-gray-900 dark:text-white hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-150`}
+        aria-label="Select date range preset"
       >
         <option value="">Select Preset...</option>
         {presets.map((p) => (

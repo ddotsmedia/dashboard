@@ -8,6 +8,7 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import clsx from 'clsx';
+import { useChartResponsive } from '@/lib/hooks/useChartResponsive';
 import { useDashboardCustomization } from '@/hooks/useDashboardCustomization';
 import { WidgetGallery } from './WidgetGallery';
 import { LayoutPreview } from './LayoutPreview';
@@ -19,6 +20,7 @@ interface CustomizeModalProps {
 }
 
 export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
+  const { isMobile } = useChartResponsive();
   const {
     widgetVisibility,
     widgetOrder,
@@ -57,47 +59,73 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
         onClick={onClose}
       />
 
-      {/* Modal Container */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-        <div className="relative w-full max-w-6xl my-8">
+      {/* Modal Container - Responsive sizing */}
+      <div className={clsx(
+        'fixed inset-0 z-50 flex items-center justify-center overflow-y-auto',
+        isMobile ? 'p-0' : 'p-4'
+      )}>
+        <div className={clsx(
+          'relative w-full my-0',
+          isMobile ? 'max-h-[100vh]' : 'max-w-6xl my-8'
+        )}>
           {/* Modal Content */}
-          <div className="bg-white dark:bg-slate-900 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col max-h-[90vh]">
-            {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
-              <div>
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+          <div className="bg-white dark:bg-slate-900 rounded-t-lg shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col max-h-[90vh]">
+            {/* Header - Responsive padding */}
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 flex-shrink-0" style={{
+              padding: isMobile ? '16px' : '24px'
+            }}>
+              <div className="flex-1">
+                <h2 className={clsx(
+                  'font-bold text-slate-900 dark:text-white',
+                  isMobile ? 'text-lg' : 'text-2xl'
+                )}>
                   Customize Dashboard
                 </h2>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                  Configure widgets, layout, and save custom layouts
-                </p>
+                {!isMobile && (
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                    Configure widgets, layout, and save custom layouts
+                  </p>
+                )}
               </div>
               <button
                 onClick={onClose}
                 className={clsx(
-                  'p-2 rounded-lg transition-colors duration-150',
+                  'rounded-lg transition-colors duration-150 flex-shrink-0',
                   'text-slate-500 dark:text-slate-400',
                   'hover:bg-slate-100 dark:hover:bg-slate-800',
-                  'hover:text-slate-700 dark:hover:text-slate-200'
+                  'hover:text-slate-700 dark:hover:text-slate-200',
+                  isMobile ? 'p-3 h-11 w-11' : 'p-2 h-8 w-8'
                 )}
+                aria-label="Close modal"
               >
-                <X size={24} className="w-6 h-6" />
+                <X size={isMobile ? 24 : 24} className="w-6 h-6" />
               </button>
             </div>
 
-            {/* Content */}
-            <div className="flex-grow overflow-hidden flex flex-col md:flex-row">
-              {/* Left Column - Widget Gallery */}
-              <div className="flex-1 border-r border-slate-200 dark:border-slate-700 p-6 overflow-hidden flex flex-col">
+            {/* Content - Single column on mobile, two columns on desktop */}
+            <div className={clsx(
+              'flex-grow overflow-hidden flex',
+              isMobile ? 'flex-col' : 'flex-row',
+              isMobile ? 'divide-y' : 'divide-x',
+              'divide-slate-200 dark:divide-slate-700'
+            )}>
+              {/* Left Column - Widget Gallery - Scrollable on mobile */}
+              <div className={clsx(
+                'flex-1 overflow-hidden flex flex-col',
+                isMobile ? 'p-4 max-h-[40%]' : 'border-r border-slate-200 dark:border-slate-700 p-6'
+              )}>
                 <WidgetGallery
                   widgetVisibility={widgetVisibility}
                   onToggleWidget={toggleWidget}
                 />
               </div>
 
-              {/* Right Column - Layout Preview and Manager */}
-              <div className="flex-1 p-6 overflow-hidden flex flex-col">
-                <div className="flex-grow overflow-y-auto mb-6">
+              {/* Right Column - Layout Preview and Manager - Scrollable */}
+              <div className={clsx(
+                'flex-1 overflow-hidden flex flex-col',
+                isMobile ? 'p-4' : 'p-6'
+              )}>
+                <div className="flex-grow overflow-y-auto mb-4 sm:mb-6">
                   <LayoutPreview
                     widgetOrder={widgetOrder}
                     widgetSizes={widgetSizes}
@@ -109,7 +137,10 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
                 </div>
 
                 {/* Layout Manager */}
-                <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
+                <div className={clsx(
+                  'border-t border-slate-200 dark:border-slate-700',
+                  isMobile ? 'pt-4' : 'pt-6'
+                )}>
                   <LayoutManager
                     savedLayouts={savedLayouts}
                     currentLayout={{
@@ -125,26 +156,46 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
               </div>
             </div>
 
-            {/* Footer */}
-            <div className="border-t border-slate-200 dark:border-slate-700 p-6 flex items-center justify-between gap-3 flex-shrink-0">
-              <button
-                onClick={() => setConfirmReset(true)}
-                className={clsx(
-                  'px-4 py-2 rounded-lg font-medium transition-colors duration-150',
-                  'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300',
-                  'hover:bg-slate-200 dark:hover:bg-slate-700'
-                )}
-              >
-                Reset to Default
-              </button>
+            {/* Footer - Responsive buttons */}
+            <div className={clsx(
+              'border-t border-slate-200 dark:border-slate-700 flex items-center gap-2 flex-shrink-0',
+              isMobile ? 'p-4 flex-col-reverse' : 'p-6 justify-between'
+            )}>
+              {!isMobile && (
+                <button
+                  onClick={() => setConfirmReset(true)}
+                  className={clsx(
+                    'px-4 py-2 rounded-lg font-medium transition-colors duration-150',
+                    'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300',
+                    'hover:bg-slate-200 dark:hover:bg-slate-700'
+                  )}
+                >
+                  Reset to Default
+                </button>
+              )}
 
-              <div className="flex gap-3">
+              <div className={clsx(
+                'flex gap-2 w-full',
+                isMobile ? 'flex-col' : ''
+              )}>
+                <button
+                  onClick={() => setConfirmReset(true)}
+                  className={clsx(
+                    'px-4 py-2 rounded-lg font-medium transition-colors duration-150',
+                    'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300',
+                    'hover:bg-slate-200 dark:hover:bg-slate-700',
+                    isMobile ? 'w-full' : 'hidden'
+                  )}
+                >
+                  Reset
+                </button>
                 <button
                   onClick={onClose}
                   className={clsx(
-                    'px-6 py-2 rounded-lg font-medium transition-colors duration-150',
+                    'px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors duration-150',
                     'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white',
-                    'hover:bg-slate-200 dark:hover:bg-slate-700'
+                    'hover:bg-slate-200 dark:hover:bg-slate-700',
+                    isMobile ? 'flex-1' : ''
                   )}
                 >
                   Cancel
@@ -152,9 +203,10 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
                 <button
                   onClick={handleSave}
                   className={clsx(
-                    'px-6 py-2 rounded-lg font-medium transition-colors duration-150',
+                    'px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors duration-150',
                     'bg-indigo-600 dark:bg-indigo-700 text-white',
-                    'hover:bg-indigo-700 dark:hover:bg-indigo-600'
+                    'hover:bg-indigo-700 dark:hover:bg-indigo-600',
+                    isMobile ? 'flex-1 h-11 flex items-center justify-center' : ''
                   )}
                 >
                   Save & Close

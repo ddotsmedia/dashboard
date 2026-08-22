@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import type { EChartsOption } from 'echarts';
+import { useChartResponsive } from '@/lib/hooks/useChartResponsive';
 import {
   transformToLineChartData,
   getLineChartXAxisLabels,
@@ -38,6 +39,11 @@ export const RevenueExpenseChart: React.FC<RevenueExpenseChartProps> = ({
   dateRange,
   height = 400,
 }) => {
+  const { isMobile, isTablet, isDesktop } = useChartResponsive();
+
+  // Responsive height
+  const responsiveHeight = isMobile ? 250 : isTablet ? 350 : height;
+
   const chartOptions = useMemo<EChartsOption>(() => {
     const chartData = transformToLineChartData(data);
     const xAxisLabels = getLineChartXAxisLabels(data);
@@ -45,14 +51,18 @@ export const RevenueExpenseChart: React.FC<RevenueExpenseChartProps> = ({
 
     return {
       color: [getMetricColor('revenue'), getMetricColor('expenses'), getMetricColor('profit')],
+      responsive: true,
+      maintainAspectRatio: false,
       tooltip: {
         trigger: 'axis',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
         borderColor: 'transparent',
         textStyle: {
           color: '#fff',
-          fontSize: 12,
+          fontSize: isMobile ? 11 : 12,
         },
+        // Touch-friendly tooltip (no hover)
+        confine: true,
         formatter: function (params: unknown) {
           if (!Array.isArray(params)) return '';
 
@@ -70,19 +80,22 @@ export const RevenueExpenseChart: React.FC<RevenueExpenseChartProps> = ({
         },
       },
       legend: {
-        top: 'right',
-        right: 10,
+        top: isMobile ? 'bottom' : 'right',
+        right: isMobile ? 'center' : 10,
+        left: isMobile ? 'center' : 'auto',
         textStyle: {
           color: 'rgba(0, 0, 0, 0.65)',
-          fontSize: 12,
+          fontSize: isMobile ? 10 : 12,
         },
         data: ['Revenue', 'Expenses', 'Profit'],
+        orient: isMobile ? 'horizontal' : 'vertical',
+        itemGap: isMobile ? 10 : 20,
       },
       grid: {
         left: '3%',
         right: '3%',
-        bottom: '10%',
-        top: '5%',
+        bottom: isMobile ? '20%' : '10%',
+        top: isMobile ? '5%' : '5%',
         containLabel: true,
       },
       xAxis: {
@@ -90,8 +103,10 @@ export const RevenueExpenseChart: React.FC<RevenueExpenseChartProps> = ({
         boundaryGap: true,
         data: xAxisLabels,
         axisLabel: {
-          fontSize: 11,
+          fontSize: isMobile ? 10 : 11,
           color: 'rgba(0, 0, 0, 0.45)',
+          rotate: isMobile ? 45 : 0,
+          interval: isMobile ? Math.ceil(xAxisLabels.length / 6) - 1 : 0,
         },
         axisLine: {
           lineStyle: {
@@ -202,7 +217,7 @@ export const RevenueExpenseChart: React.FC<RevenueExpenseChartProps> = ({
   return (
     <ReactECharts
       option={chartOptions}
-      style={{ height: `${height}px`, width: '100%' }}
+      style={{ height: `${responsiveHeight}px`, width: '100%' }}
       opts={{ renderer: 'canvas' }}
     />
   );

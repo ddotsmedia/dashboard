@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import type { EChartsOption } from 'echarts';
+import { useChartResponsive } from '@/lib/hooks/useChartResponsive';
 import {
   transformToPieChartData,
   getExpenseColor,
@@ -30,18 +31,26 @@ export const ExpenseBreakdownChart: React.FC<ExpenseBreakdownChartProps> = ({
   currency = 'AED',
   height = 400,
 }) => {
+  const { isMobile, isTablet, isDesktop } = useChartResponsive();
+
+  // Responsive height
+  const responsiveHeight = isMobile ? 250 : isTablet ? 350 : height;
+
   const chartOptions = useMemo<EChartsOption>(() => {
     const chartData = transformToPieChartData(totalExpenses);
 
     return {
+      responsive: true,
+      maintainAspectRatio: false,
       tooltip: {
         trigger: 'item',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
         borderColor: 'transparent',
         textStyle: {
           color: '#fff',
-          fontSize: 12,
+          fontSize: isMobile ? 11 : 12,
         },
+        confine: true,
         formatter: function (params: unknown) {
           const param = params as {
             name: string;
@@ -55,20 +64,21 @@ export const ExpenseBreakdownChart: React.FC<ExpenseBreakdownChartProps> = ({
         },
       },
       legend: {
-        bottom: '10%',
+        bottom: isMobile ? '0%' : '10%',
         left: 'center',
         textStyle: {
           color: 'rgba(0, 0, 0, 0.65)',
-          fontSize: 11,
+          fontSize: isMobile ? 10 : 11,
         },
-        itemGap: 20,
+        itemGap: isMobile ? 10 : 20,
+        orient: isMobile ? 'horizontal' : 'vertical',
       },
       series: [
         {
           name: 'Expenses',
           type: 'pie',
-          radius: ['40%', '70%'],
-          center: ['50%', '45%'],
+          radius: isMobile ? ['30%', '60%'] : ['40%', '70%'],
+          center: ['50%', isMobile ? '40%' : '45%'],
           avoidLabelOverlap: false,
           itemStyle: {
             borderRadius: [4, 4],
@@ -76,16 +86,16 @@ export const ExpenseBreakdownChart: React.FC<ExpenseBreakdownChartProps> = ({
             borderWidth: 2,
           },
           label: {
-            show: true,
+            show: !isMobile,
             position: 'outside',
             formatter: '{b}\n{d}%',
-            fontSize: 11,
+            fontSize: isMobile ? 9 : 11,
             color: 'rgba(0, 0, 0, 0.65)',
-            distanceToLabelLine: 8,
+            distanceToLabelLine: isMobile ? 5 : 8,
           },
           labelLine: {
-            length: 20,
-            length2: 10,
+            length: isMobile ? 10 : 20,
+            length2: isMobile ? 5 : 10,
             smooth: false,
           },
           data: chartData.map((item, index) => ({
@@ -105,12 +115,12 @@ export const ExpenseBreakdownChart: React.FC<ExpenseBreakdownChartProps> = ({
         },
       ],
     };
-  }, [totalExpenses, currency]);
+  }, [totalExpenses, currency, isMobile]);
 
   return (
     <ReactECharts
       option={chartOptions}
-      style={{ height: `${height}px`, width: '100%' }}
+      style={{ height: `${responsiveHeight}px`, width: '100%' }}
       opts={{ renderer: 'canvas' }}
     />
   );

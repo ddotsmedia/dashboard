@@ -129,35 +129,38 @@ function KPICardComponent({
   const trendColor = getTrendColor(trend, change);
   const trendIcon = getTrendIcon(trend, change);
 
+  // Sparkline dimensions with responsive sizing via container
+  // Width: 80px on desktop (via flex layout), adapts to mobile through container constraints
+  const sparklineWidth = 80;
+  const sparklineHeight = 40;
+
   return (
     <Card
       onClick={onClick}
       className={cn(
-        'p-6',
-        'flex flex-col justify-between',
-        'h-full',
-        onClick && 'cursor-pointer hover:shadow-lg transition-shadow'
+        'flex flex-col justify-between h-full',
+        onClick && 'cursor-pointer'
       )}
     >
-      {/* Header: Label */}
-      <div className="mb-4 flex-1">
-        <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide text-start">
+      {/* Header: Label with responsive padding and font size */}
+      <div className="mb-3 sm:mb-4 md:mb-4 flex-1">
+        <p className="text-xs sm:text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide text-start">
           {label}
         </p>
       </div>
 
-      {/* Main content: Value + Sparkline */}
-      <div className="flex items-end justify-between gap-4">
+      {/* Main content: Value + Sparkline with responsive layout */}
+      <div className="flex flex-col sm:flex-row items-end justify-between gap-3 sm:gap-4">
         {/* Start: Value and Change */}
-        <div className="flex-1 min-w-0">
-          {/* Formatted Value */}
-          <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 break-words text-start">
+        <div className="flex-1 min-w-0 w-full sm:w-auto">
+          {/* Formatted Value - Responsive: 24px mobile, 30px tablet, 32px desktop */}
+          <p className="text-2xl md:text-[30px] lg:text-[32px] font-bold text-gray-900 dark:text-white mb-1 sm:mb-2 break-words text-start leading-tight">
             {formattedValue}
           </p>
 
-          {/* Change percentage with trend */}
+          {/* Change percentage with trend - Responsive: 12px mobile, 14px desktop */}
           {change !== undefined && (
-            <div className={cn('flex items-center gap-1 text-sm', trendColor)}>
+            <div className={cn('flex items-center gap-1 text-xs sm:text-sm flex-wrap', trendColor)}>
               {trendIcon}
               <span className="font-medium">
                 {Math.abs(change).toFixed(1)}%
@@ -169,15 +172,17 @@ function KPICardComponent({
           )}
         </div>
 
-        {/* End: Sparkline Chart */}
+        {/* End: Sparkline Chart - Responsive width: 60px mobile, 80px desktop */}
         {sparklineData && sparklineData.length > 0 && (
-          <div className="flex-shrink-0">
-            <Sparkline
-              data={sparklineData}
-              color={sparklineColor}
-              width={80}
-              height={40}
-            />
+          <div className="flex-shrink-0 w-full sm:w-auto flex justify-end">
+            <div className="min-w-max md:min-w-[80px]">
+              <Sparkline
+                data={sparklineData}
+                color={sparklineColor}
+                width={sparklineWidth}
+                height={sparklineHeight}
+              />
+            </div>
           </div>
         )}
       </div>

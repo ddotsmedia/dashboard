@@ -9,6 +9,9 @@ import '@/styles/variables.css';
 import { QueryProvider } from '@/components/providers/QueryProvider';
 import { AIAssistantPanel } from '@/components/ai/AIAssistantPanel';
 
+// Mark this layout as dynamic to avoid build-time static generation issues with next-intl
+export const dynamic = 'force-dynamic';
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -30,16 +33,17 @@ export function generateStaticParams() {
 
 interface LocaleLayoutProps {
   children: ReactNode;
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
 
 export default async function LocaleLayout({
   children,
-  params: { locale },
+  params,
 }: LocaleLayoutProps) {
-  if (!locales.includes(locale as any)) {
+  const { locale } = await params;
+  if (!locales.includes(locale as unknown as typeof locales[number])) {
     notFound();
   }
 

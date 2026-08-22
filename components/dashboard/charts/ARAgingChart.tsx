@@ -5,9 +5,10 @@
 
 'use client';
 
-import { useEffect, useRef, memo, type ReactElement } from 'react';
+import { useEffect, useRef, memo, useState, type ReactElement } from 'react';
 import * as echarts from 'echarts';
 import type { EChartsOption } from 'echarts';
+import { useChartResponsive } from '@/lib/hooks/useChartResponsive';
 import { formatCurrency } from '@/lib/formatting/currency';
 
 interface ARAgingChartProps {
@@ -68,6 +69,14 @@ function ARAgingChartComponent({
 }: ARAgingChartProps): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
+  const { isMobile, isTablet, isDesktop } = useChartResponsive();
+  const [chartHeight, setChartHeight] = useState(400);
+
+  // Set responsive height
+  useEffect(() => {
+    const height = isMobile ? 250 : isTablet ? 350 : 400;
+    setChartHeight(height);
+  }, [isMobile, isTablet]);
 
   useEffect(() => {
     if (!containerRef.current || !data || data.length === 0) return;
@@ -76,7 +85,6 @@ function ARAgingChartComponent({
     if (!chartInstance.current) {
       chartInstance.current = echarts.init(containerRef.current, null, {
         renderer: 'canvas',
-        useDirtyRect: true,
       });
     }
 
@@ -98,6 +106,8 @@ function ARAgingChartComponent({
         AGING_COLORS.d61_90,
         AGING_COLORS.d90plus,
       ],
+      responsive: true,
+      maintainAspectRatio: false,
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -108,19 +118,25 @@ function ARAgingChartComponent({
         borderColor: 'rgba(255, 255, 255, 0.2)',
         textStyle: {
           color: '#fff',
+          fontSize: isMobile ? 11 : 12,
         },
+        confine: true,
       },
       legend: {
         data: ['Current', '1-30 Days', '31-60 Days', '61-90 Days', '90+ Days'],
-        bottom: 0,
+        bottom: isMobile ? '0%' : '0%',
+        left: isMobile ? 'center' : 'auto',
         textStyle: {
           color: '#666',
+          fontSize: isMobile ? 10 : 12,
         },
+        orient: isMobile ? 'horizontal' : 'vertical',
+        itemGap: isMobile ? 8 : 20,
       },
       grid: {
         left: '3%',
         right: '3%',
-        bottom: '15%',
+        bottom: isMobile ? '25%' : '15%',
         top: '3%',
         containLabel: true,
       },
@@ -138,8 +154,9 @@ function ARAgingChartComponent({
         },
         axisLabel: {
           color: '#666',
-          interval: 0,
-          rotate: 45,
+          fontSize: isMobile ? 10 : 11,
+          interval: isMobile ? Math.ceil(months.length / 5) - 1 : 0,
+          rotate: isMobile ? 45 : 45,
         },
       },
       yAxis: {
@@ -247,7 +264,7 @@ function ARAgingChartComponent({
       ref={containerRef}
       style={{
         width: '100%',
-        height: '400px',
+        height: `${chartHeight}px`,
       }}
     />
   );

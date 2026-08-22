@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useChartResponsive } from '@/lib/hooks/useChartResponsive';
 import { ChartSkeleton } from './ChartSkeleton';
 
 interface ChartContainerProps {
@@ -24,13 +25,15 @@ export const ChartContainer: React.FC<ChartContainerProps> = ({
   className = '',
   height = 'h-96',
 }) => {
+  const { isMobile } = useChartResponsive();
+
   return (
     <div
-      className={`w-full rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900 ${className}`}
+      className={`w-full rounded-lg border border-gray-200 bg-white p-3 sm:p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900 ${className}`}
     >
       {title && (
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">{title}</h3>
+        <div className="mb-3 sm:mb-4">
+          <h3 className={`font-semibold text-gray-900 dark:text-gray-50 ${isMobile ? 'text-base' : 'text-lg'}`}>{title}</h3>
         </div>
       )}
 

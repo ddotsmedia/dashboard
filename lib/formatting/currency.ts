@@ -3,7 +3,7 @@
  * Provides locale-aware currency formatting
  */
 
-import { formatCurrency as formatCurrencyLocalized, formatNumber as formatNumberLocalized } from '@/lib/localization/formatters';
+import { formatCurrency as formatCurrencyLocalized, formatNumber as formatNumberLocalized, formatPercent as formatPercentLocalized } from '@/lib/localization/formatters';
 
 type Locale = 'en' | 'ar';
 
@@ -58,7 +58,6 @@ export function formatPercent(
   decimals: number = 2,
   locale: Locale = 'ar'
 ): string {
-  const { formatPercent: formatPercentLocalized } = require('@/lib/localization/formatters');
   return formatPercentLocalized(value, locale, decimals);
 }
 

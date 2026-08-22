@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { X, Download, Edit2, RotateCcw, Check, Trash2, FileText } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
+import { useChartResponsive } from '@/lib/hooks/useChartResponsive';
 import { formatCurrency } from '@/lib/formatting/currency';
 import { cn } from '@/lib/utils';
 import type { Transaction } from '@/types/dashboard';
@@ -20,6 +21,7 @@ interface TransactionDetailsDrawerProps {
  */
 export function TransactionDetailsDrawer({ transaction, isOpen, onClose }: TransactionDetailsDrawerProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const { isMobile } = useChartResponsive();
 
   if (!transaction) return null;
 
@@ -64,26 +66,36 @@ export function TransactionDetailsDrawer({ transaction, isOpen, onClose }: Trans
         />
       )}
 
-      {/* Drawer */}
+      {/* Drawer/Modal */}
       <div
         className={cn(
-          'fixed right-0 top-0 h-screen z-50 w-full md:w-[400px] bg-white dark:bg-slate-800 shadow-lg transition-transform duration-300 transform overflow-y-auto',
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+          'fixed z-50 bg-white dark:bg-slate-800 shadow-lg transition-all duration-300 overflow-y-auto',
+          isMobile
+            ? 'inset-0 rounded-t-lg' // Fullscreen on mobile with top rounded corners
+            : 'right-0 top-0 h-screen w-[400px] transform', // Side drawer on desktop
+          isMobile ? (isOpen ? 'translate-y-0' : 'translate-y-full') : isOpen ? 'translate-x-0' : 'translate-x-full'
         )}
       >
-        {/* Header */}
-        <div className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 p-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Transaction Details</h2>
+        {/* Header - Sticky with 44px+ close button on mobile */}
+        <div className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 p-4 flex items-center justify-between flex-shrink-0">
+          <h2 className={cn(
+            'font-semibold text-gray-900 dark:text-white',
+            isMobile ? 'text-base' : 'text-lg'
+          )}>Transaction Details</h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors"
+            className={cn(
+              'hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors flex-shrink-0',
+              isMobile ? 'p-3 h-11 w-11' : 'p-1 h-8 w-8'
+            )}
+            aria-label="Close drawer"
           >
-            <X size={20} className="text-gray-500 dark:text-gray-400" />
+            <X size={isMobile ? 24 : 20} className="text-gray-500 dark:text-gray-400" />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-6">
+        {/* Content - Responsive padding */}
+        <div className={cn('space-y-6', isMobile ? 'p-4' : 'p-6')}>
           {/* Transaction Info Card */}
           <Card className="p-4">
             <div className="space-y-4">
@@ -201,41 +213,56 @@ export function TransactionDetailsDrawer({ transaction, isOpen, onClose }: Trans
             <div className="text-xs text-gray-500 dark:text-gray-400">No attachments</div>
           </div>
 
-          {/* Action Buttons */}
+          {/* Action Buttons - 44px+ height on mobile */}
           <div className="pt-4 border-t border-gray-200 dark:border-slate-700 space-y-2">
             <button
               disabled={isEditing}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+              className={cn(
+                'w-full flex items-center justify-center gap-2 bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium',
+                isMobile ? 'px-3 py-3 text-sm' : 'px-4 py-2 text-sm'
+              )}
             >
-              <Edit2 size={16} />
+              <Edit2 size={isMobile ? 18 : 16} />
               Edit
             </button>
 
             <button
               disabled={isEditing || transaction.status?.toLowerCase() === 'reconciled'}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-900 text-amber-700 dark:text-amber-300 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+              className={cn(
+                'w-full flex items-center justify-center gap-2 bg-amber-50 dark:bg-amber-900 text-amber-700 dark:text-amber-300 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium',
+                isMobile ? 'px-3 py-3 text-sm' : 'px-4 py-2 text-sm'
+              )}
             >
-              <RotateCcw size={16} />
+              <RotateCcw size={isMobile ? 18 : 16} />
               Reverse
             </button>
 
             {transaction.status?.toLowerCase() === 'draft' && (
-              <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-100 dark:hover:bg-green-800 transition-colors text-sm font-medium">
-                <Check size={16} />
+              <button className={cn(
+                'w-full flex items-center justify-center gap-2 bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-100 dark:hover:bg-green-800 transition-colors font-medium',
+                isMobile ? 'px-3 py-3 text-sm' : 'px-4 py-2 text-sm'
+              )}>
+                <Check size={isMobile ? 18 : 16} />
                 Post
               </button>
             )}
 
-            <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium">
-              <Download size={16} />
+            <button className={cn(
+              'w-full flex items-center justify-center gap-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium',
+              isMobile ? 'px-3 py-3 text-sm' : 'px-4 py-2 text-sm'
+            )}>
+              <Download size={isMobile ? 18 : 16} />
               Download
             </button>
 
             <button
               disabled={isEditing}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg hover:bg-red-100 dark:hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+              className={cn(
+                'w-full flex items-center justify-center gap-2 bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg hover:bg-red-100 dark:hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium',
+                isMobile ? 'px-3 py-3 text-sm' : 'px-4 py-2 text-sm'
+              )}
             >
-              <Trash2 size={16} />
+              <Trash2 size={isMobile ? 18 : 16} />
               Delete
             </button>
           </div>

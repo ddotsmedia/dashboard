@@ -30,13 +30,20 @@ export function ThemeSwitcher() {
     setTheme(themes[nextIndex]);
   };
 
+  const themeLabel = {
+    light: 'Light',
+    dark: 'Dark',
+    system: 'System',
+  };
+
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
-      title={`Theme: ${theme}`}
+      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors h-10 w-10 flex items-center justify-center flex-shrink-0"
+      title={`Theme: ${themeLabel[theme]} (click to cycle)`}
+      aria-label={`Theme: ${themeLabel[theme]}`}
     >
-      {theme === 'dark' ? (
+      {theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) ? (
         <Moon className="w-5 h-5 text-gray-700 dark:text-gray-300" />
       ) : (
         <Sun className="w-5 h-5 text-gray-700 dark:text-gray-300" />

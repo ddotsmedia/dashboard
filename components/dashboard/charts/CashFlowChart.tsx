@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import type { EChartsOption } from 'echarts';
+import { useChartResponsive } from '@/lib/hooks/useChartResponsive';
 import {
   transformToCashFlowData,
   getCashFlowColor,
@@ -31,20 +32,28 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
   currency = 'AED',
   height = 400,
 }) => {
+  const { isMobile, isTablet, isDesktop } = useChartResponsive();
+
+  // Responsive height
+  const responsiveHeight = isMobile ? 250 : isTablet ? 350 : height;
+
   const chartOptions = useMemo<EChartsOption>(() => {
     const chartData = transformToCashFlowData(data);
     const categories = chartData.map((item) => item.category);
     const values = chartData.map((item) => item.value);
 
     return {
+      responsive: true,
+      maintainAspectRatio: false,
       tooltip: {
         trigger: 'axis',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
         borderColor: 'transparent',
         textStyle: {
           color: '#fff',
-          fontSize: 12,
+          fontSize: isMobile ? 11 : 12,
         },
+        confine: true,
         formatter: function (params: unknown) {
           if (!Array.isArray(params)) return '';
 
@@ -61,18 +70,21 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
         },
       },
       legend: {
-        top: 'right',
-        right: 10,
+        top: isMobile ? 'bottom' : 'right',
+        right: isMobile ? 'center' : 10,
+        left: isMobile ? 'center' : 'auto',
         textStyle: {
           color: 'rgba(0, 0, 0, 0.65)',
-          fontSize: 12,
+          fontSize: isMobile ? 10 : 12,
         },
         data: ['Cash Flow Amount'],
+        orient: isMobile ? 'horizontal' : 'vertical',
+        itemGap: isMobile ? 10 : 20,
       },
       grid: {
         left: '3%',
         right: '3%',
-        bottom: '15%',
+        bottom: isMobile ? '20%' : '15%',
         top: '5%',
         containLabel: true,
       },
@@ -80,10 +92,10 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
         type: 'category',
         data: categories,
         axisLabel: {
-          fontSize: 11,
+          fontSize: isMobile ? 10 : 11,
           color: 'rgba(0, 0, 0, 0.45)',
-          interval: 0,
-          rotate: 15,
+          interval: isMobile ? Math.ceil(categories.length / 4) - 1 : 0,
+          rotate: isMobile ? 45 : 15,
         },
         axisLine: {
           lineStyle: {
@@ -145,7 +157,7 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
   return (
     <ReactECharts
       option={chartOptions}
-      style={{ height: `${height}px`, width: '100%' }}
+      style={{ height: `${responsiveHeight}px`, width: '100%' }}
       opts={{ renderer: 'canvas' }}
     />
   );

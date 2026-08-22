@@ -81,17 +81,17 @@ export function DashboardContent() {
 
   if (uniqueVisibleWidgets.length === 0) {
     return (
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+      <div className="space-y-6 sm:space-y-8">
+        <div className="px-4 sm:px-5 md:px-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             Financial Dashboard
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-2">
             Real-time overview of your key financial metrics
           </p>
         </div>
-        <div className="text-center py-12">
-          <p className="text-gray-500 dark:text-gray-400">
+        <div className="text-center py-8 sm:py-12 px-4">
+          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">
             No widgets available for your role. Contact your administrator for access.
           </p>
         </div>
@@ -100,20 +100,20 @@ export function DashboardContent() {
   }
 
   return (
-    <div className="space-y-8 transition-opacity duration-300">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+    <div className="space-y-6 sm:space-y-8 transition-opacity duration-300">
+      {/* Header with responsive spacing */}
+      <div className="px-4 sm:px-5 md:px-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
           Financial Dashboard
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-2">
           Real-time overview of your key financial metrics
         </p>
       </div>
 
       {/* Dynamic Grid of Widgets */}
       <section>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 px-4 sm:px-5 md:px-6">
           {uniqueVisibleWidgets.map((widgetId) => (
             <DashboardWidget
               key={widgetId}

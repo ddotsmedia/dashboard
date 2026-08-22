@@ -39,7 +39,6 @@ export function Sparkline({
     if (!chartInstance.current) {
       chartInstance.current = echarts.init(containerRef.current, null, {
         renderer: 'canvas',
-        useDirtyRect: true,
       });
     }
 

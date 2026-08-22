@@ -18,7 +18,17 @@ export function LanguageSwitcher({ currentLocale, onLocaleChange }: LanguageSwit
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Get current language info
   const currentLanguage = LANGUAGES.find((lang) => lang.id === currentLocale) || LANGUAGES[0];
@@ -67,23 +77,41 @@ export function LanguageSwitcher({ currentLocale, onLocaleChange }: LanguageSwit
 
   return (
     <div className="relative inline-block" ref={dropdownRef}>
-      {/* Trigger Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
-        title="Change Language"
-        aria-label="Change Language"
-        aria-expanded={isOpen}
-      >
-        <Globe className="w-4 h-4" />
-        <span className="hidden sm:inline">{currentLanguage.flag} {currentLanguage.label}</span>
-        <span className="sm:hidden">{currentLanguage.flag}</span>
-      </button>
+      {/* Trigger Button - Icon only on mobile, icon + text on desktop */}
+      <div className="relative inline-block">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          onMouseEnter={() => isMobile && setShowTooltip(true)}
+          onMouseLeave={() => isMobile && setShowTooltip(false)}
+          className={`flex items-center gap-2 rounded-md text-sm transition-colors flex-shrink-0 ${
+            isMobile
+              ? 'p-2 h-10 w-10 justify-center bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700'
+              : 'px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 hover:border-gray-400 dark:hover:border-gray-500'
+          }`}
+          title="Change Language"
+          aria-label="Change Language"
+          aria-expanded={isOpen}
+        >
+          <Globe className="w-4 h-4 flex-shrink-0 text-gray-700 dark:text-gray-300" />
+          {/* Hide text on mobile, show on desktop */}
+          <span className="hidden md:inline whitespace-nowrap text-gray-900 dark:text-gray-100">{currentLanguage.flag} {currentLanguage.label}</span>
+        </button>
 
-      {/* Dropdown Menu */}
+        {/* Mobile Tooltip - Show on hover/focus */}
+        {isMobile && showTooltip && (
+          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded whitespace-nowrap z-50">
+            {currentLanguage.label}
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-700"></div>
+          </div>
+        )}
+      </div>
+
+      {/* Dropdown Menu - Wider on mobile for touch targets, auto on desktop */}
       {isOpen && (
         <div
-          className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50"
+          className={`absolute right-0 mt-2 bg-white dark:bg-slate-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50 animate-in fade-in duration-150 ${
+            isMobile ? 'w-56' : 'w-48'
+          }`}
           role="menu"
           aria-orientation="vertical"
         >
@@ -91,17 +119,17 @@ export function LanguageSwitcher({ currentLocale, onLocaleChange }: LanguageSwit
             <button
               key={language.id}
               onClick={() => handleLocaleChange(language.id as 'en' | 'ar')}
-              className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-2 ${
+              className={`w-full text-left px-4 py-3 text-sm transition-colors flex items-center gap-2 min-h-11 md:py-2 md:min-h-auto ${
                 language.id === currentLocale
                   ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
               role="menuitem"
             >
-              <span>{language.flag}</span>
-              <span>{language.label}</span>
+              <span className="flex-shrink-0">{language.flag}</span>
+              <span className="flex-1">{language.label}</span>
               {language.id === currentLocale && (
-                <span className="ml-auto text-lg">✓</span>
+                <span className="ml-auto text-lg flex-shrink-0">✓</span>
               )}
             </button>
           ))}
