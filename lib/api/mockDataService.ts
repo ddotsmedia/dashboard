@@ -17,7 +17,7 @@ import type { DashboardFilters } from '@/types/api';
 import { mockDashboardData } from '@/data/mock/dashboardData';
 
 export class MockDashboardService implements IDashboardService {
-  async getDashboardSummary(filters: DashboardFilters): Promise<DashboardSummary> {
+  async getDashboardSummary(_filters: DashboardFilters): Promise<DashboardSummary> {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 100));
     return mockDashboardData;
