@@ -1,11 +1,13 @@
+import type { ReactNode } from 'react';
 import type { Metadata, Viewport } from 'next';
+import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { locales } from '@/i18n/config';
 import '@/styles/globals.css';
 import '@/styles/variables.css';
 import { QueryProvider } from '@/components/providers/QueryProvider';
 import { AIAssistantPanel } from '@/components/ai/AIAssistantPanel';
-import type { ReactNode } from 'react';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -22,7 +24,11 @@ export const metadata: Metadata = {
   },
 };
 
-interface LayoutProps {
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
+interface LocaleLayoutProps {
   children: ReactNode;
   params: {
     locale: string;
@@ -32,7 +38,11 @@ interface LayoutProps {
 export default async function LocaleLayout({
   children,
   params: { locale },
-}: LayoutProps) {
+}: LocaleLayoutProps) {
+  if (!locales.includes(locale as any)) {
+    notFound();
+  }
+
   const messages = await getMessages();
   const isRTL = locale === 'ar';
   const dir = isRTL ? 'rtl' : 'ltr';
