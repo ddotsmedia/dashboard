@@ -19,6 +19,26 @@ export { useAIInsights } from './useAIInsights';
 export { useLocale } from './useLocale';
 export { useTranslation } from './useTranslation';
 
+// Performance optimization hooks
+export {
+  useRenderTime,
+  useComponentLifecycleMetrics,
+  useMemoryLeakDetector,
+  useLayoutEffectMetrics,
+  markPerformance,
+  measurePerformance,
+  useQueryPerformance,
+} from './usePerformanceMonitoring';
+export {
+  useMemoizedCurrencyFormatter,
+  useMemoizedNumberFormatter,
+  useMemoizedDateFormatter,
+  useMemoizedPercentFormatter,
+  useMemoizedLargeNumberFormatter,
+  useAllFormatters,
+  useMemoizedKPIFormatter,
+} from './useMemoizedFormatters';
+
 export type { UseChartThemeReturn } from './useChartTheme';
 export type { ReceivableMetric } from './useReceivables';
 export type { PayableMetric } from './usePayables';

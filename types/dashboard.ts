@@ -234,3 +234,6 @@ export interface CategoryRanking {
   trend: 'up' | 'down' | 'stable';
   changePercent: number;
 }
+
+export type Locale = 'en' | 'ar';
+export type Currency = 'AED' | 'USD' | 'EUR';

@@ -137,9 +137,19 @@ function KPICardComponent({
   return (
     <Card
       onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      } : undefined}
+      aria-label={`${label}: ${formattedValue}`}
       className={cn(
         'flex flex-col justify-between h-full',
-        onClick && 'cursor-pointer'
+        onClick && 'cursor-pointer hover:shadow-lg transition-shadow',
+        onClick && 'focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900'
       )}
     >
       {/* Header: Label with responsive padding and font size */}

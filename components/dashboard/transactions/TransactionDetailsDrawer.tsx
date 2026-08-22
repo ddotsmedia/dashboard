@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { X, Download, Edit2, RotateCcw, Check, Trash2, FileText } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { useChartResponsive } from '@/lib/hooks/useChartResponsive';
+import { useFocusManagement } from '@/hooks/useFocusManagement';
 import { formatCurrency } from '@/lib/formatting/currency';
 import { cn } from '@/lib/utils';
 import type { Transaction } from '@/types/dashboard';
@@ -22,6 +23,7 @@ interface TransactionDetailsDrawerProps {
 export function TransactionDetailsDrawer({ transaction, isOpen, onClose }: TransactionDetailsDrawerProps) {
   const [isEditing, setIsEditing] = useState(false);
   const { isMobile } = useChartResponsive();
+  const { containerRef, handleKeyDown } = useFocusManagement(isOpen, onClose);
 
   if (!transaction) return null;
 
@@ -68,6 +70,8 @@ export function TransactionDetailsDrawer({ transaction, isOpen, onClose }: Trans
 
       {/* Drawer/Modal */}
       <div
+        ref={containerRef}
+        onKeyDown={handleKeyDown}
         className={cn(
           'fixed z-50 bg-white dark:bg-slate-800 shadow-lg transition-all duration-300 overflow-y-auto',
           isMobile
@@ -75,17 +79,26 @@ export function TransactionDetailsDrawer({ transaction, isOpen, onClose }: Trans
             : 'right-0 top-0 h-screen w-[400px] transform', // Side drawer on desktop
           isMobile ? (isOpen ? 'translate-y-0' : 'translate-y-full') : isOpen ? 'translate-x-0' : 'translate-x-full'
         )}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="drawer-title"
       >
         {/* Header - Sticky with 44px+ close button on mobile */}
         <div className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 p-4 flex items-center justify-between flex-shrink-0">
-          <h2 className={cn(
-            'font-semibold text-gray-900 dark:text-white',
-            isMobile ? 'text-base' : 'text-lg'
-          )}>Transaction Details</h2>
+          <h2
+            id="drawer-title"
+            className={cn(
+              'font-semibold text-gray-900 dark:text-white',
+              isMobile ? 'text-base' : 'text-lg'
+            )}
+          >
+            Transaction Details
+          </h2>
           <button
             onClick={onClose}
             className={cn(
               'hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors flex-shrink-0',
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800',
               isMobile ? 'p-3 h-11 w-11' : 'p-1 h-8 w-8'
             )}
             aria-label="Close drawer"

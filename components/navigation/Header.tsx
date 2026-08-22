@@ -85,8 +85,10 @@ export function Header() {
           {isMobile && (
             <button
               onClick={toggleSidebar}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors h-11 w-11 flex items-center justify-center flex-shrink-0"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors h-11 w-11 flex items-center justify-center flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800"
               aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+              aria-expanded={sidebarOpen}
+              aria-controls="sidebar"
               title={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
             >
               {sidebarOpen ? (
@@ -101,8 +103,10 @@ export function Header() {
           {isMobile && (
             <button
               onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors h-11 w-11 flex items-center justify-center flex-shrink-0 md:hidden"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors h-11 w-11 flex items-center justify-center flex-shrink-0 md:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800"
               aria-label="Toggle filters"
+              aria-expanded={isFiltersExpanded}
+              aria-controls="filters-panel"
               title="Toggle filters"
             >
               <ChevronDown
@@ -132,7 +136,7 @@ export function Header() {
           <AIAssistantButton />
           <button
             onClick={() => setIsCustomizeModalOpen(true)}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors h-10 w-10 flex items-center justify-center flex-shrink-0"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors h-10 w-10 flex items-center justify-center flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800"
             title="Customize Dashboard"
             aria-label="Customize Dashboard"
           >
@@ -165,7 +169,10 @@ export function Header() {
 
       {/* Mobile Filter Panel (Collapsible Accordion) */}
       {isMobile && isFiltersExpanded && (
-        <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-700 space-y-2 bg-gray-50 dark:bg-slate-700/50">
+        <div
+          id="filters-panel"
+          className="px-3 py-3 border-t border-gray-200 dark:border-gray-700 space-y-2 bg-gray-50 dark:bg-slate-700/50"
+        >
           <div className="space-y-2">
             <div className="text-xs font-medium text-gray-600 dark:text-gray-400 px-2">
               COMPANY

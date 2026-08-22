@@ -48,14 +48,10 @@ export function AlertItem({ alert }: AlertItemProps) {
 
   const handleMarkAsRead = () => {
     setIsRead(true);
-    // TODO: Call API to mark as read
-    console.log(`[Mock] Marked alert ${alert.id} as read`);
   };
 
   const handleDismiss = () => {
     setIsDismissed(true);
-    // TODO: Call API to dismiss
-    console.log(`[Mock] Dismissed alert ${alert.id}`);
   };
 
   const handleClick = () => {

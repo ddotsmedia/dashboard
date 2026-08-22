@@ -1,11 +1,12 @@
 /**
  * Alert Card Component
  * Reusable card displaying individual alert with actions
+ * Memoized to prevent unnecessary re-renders
  */
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { X, ChevronRight } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -34,7 +35,7 @@ const severityBorderColor = {
  * AlertCard Component
  * Displays an individual alert with severity badge, content, and actions
  */
-export function AlertCard({
+function AlertCardComponent({
   alert,
   onDismiss,
   onNavigate,
@@ -171,5 +172,12 @@ export function AlertCard({
     </div>
   );
 }
+
+/**
+ * Memoized AlertCard to prevent unnecessary re-renders
+ */
+export const AlertCard = memo(AlertCardComponent);
+
+AlertCard.displayName = 'AlertCard';
 
 export default AlertCard;

@@ -134,7 +134,6 @@ export const ExpenseBreakdownChart: React.FC<ExpenseBreakdownChartProps> = ({
     };
     const categoryName = param.name || (param.data?.name as string);
     if (categoryName && onCategoryClick) {
-      console.log(`[Mock] Filtering by category: ${categoryName}`);
       onCategoryClick(categoryName);
     }
   };

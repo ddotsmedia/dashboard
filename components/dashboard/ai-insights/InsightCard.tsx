@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { memo, useState, useCallback } from 'react';
 import { Sparkles, X, Info, TrendingUp } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -114,8 +114,9 @@ function ExplainTooltip({ insight }: { insight: AIInsight }) {
 /**
  * InsightCard Component
  * Displays a single AI insight with actions and metadata
+ * Memoized to prevent unnecessary re-renders
  */
-export function InsightCard({
+function InsightCardComponent({
   insight,
   onDismiss,
   onViewDetails,
@@ -128,26 +129,25 @@ export function InsightCard({
     addSuffix: true,
   });
 
-  const handleDismiss = async (e: React.MouseEvent) => {
+  const handleDismiss = useCallback(async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsDismissing(true);
     if (onDismiss) {
       await onDismiss(insight.id);
     }
-  };
+  }, [insight.id, onDismiss]);
 
-  const handleViewDetails = (e: React.MouseEvent) => {
+  const handleViewDetails = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     if (onViewDetails) {
       onViewDetails(insight);
     }
-  };
+  }, [insight, onViewDetails]);
 
-  const handleCompare = (e: React.MouseEvent) => {
+  const handleCompare = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    // Mock action - log to console for now
-    console.log('Compare action for insight:', insight.id);
-  };
+    // Mock action - placeholder for compare functionality
+  }, [insight.id]);
 
   if (isDismissing) {
     return <></>;
@@ -269,5 +269,12 @@ export function InsightCard({
     </div>
   );
 }
+
+/**
+ * Memoized InsightCard to prevent unnecessary re-renders
+ */
+export const InsightCard = memo(InsightCardComponent);
+
+InsightCard.displayName = 'InsightCard';
 
 export default InsightCard;

@@ -189,8 +189,7 @@ function ProfitabilityAnalyticsComponent(): ReactElement {
   });
 
   const handleRowClick = (row: ProfitabilityItem) => {
-    // Mock drill-down: log the clicked row
-    console.log('Drill-down:', row);
+    // Drill-down functionality placeholder
   };
 
   // Prepare chart data (top 5 by net profit)

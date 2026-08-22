@@ -125,7 +125,6 @@ export function AIInsightsWidget(): React.ReactElement {
   };
 
   const handleViewDetails = (insight: AIInsight) => {
-    console.log('View details for insight:', insight.id);
     // In a real app, this would navigate to a detail page or open a modal
   };
 

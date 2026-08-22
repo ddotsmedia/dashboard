@@ -181,8 +181,7 @@ function BudgetWidgetComponent(): ReactElement {
   });
 
   const handleRowClick = (row: BudgetItem) => {
-    // Mock drill-down: log the clicked row
-    console.log('Drill-down:', row);
+    // Drill-down functionality placeholder
   };
 
   if (isLoading) {

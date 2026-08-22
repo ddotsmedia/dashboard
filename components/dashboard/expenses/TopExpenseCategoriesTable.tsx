@@ -142,7 +142,6 @@ export const TopExpenseCategoriesTable: React.FC<TopExpenseCategoriesTableProps>
 
   const handleCategoryClick = (category: string) => {
     if (onCategoryClick) {
-      console.log(`[Mock] Filtering by category: ${category}`);
       onCategoryClick(category);
     }
   };

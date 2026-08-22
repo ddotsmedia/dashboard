@@ -242,10 +242,8 @@ function createAIService(): IAIService {
   const apiKey = process.env.NEXT_PUBLIC_AI_API_KEY;
 
   if (useMockData) {
-    console.log('Using Mock AI Service (development mode)');
     return new MockAIService();
   } else {
-    console.log('Using API AI Service (production mode)');
     return new APIAIService(apiBaseUrl, apiKey);
   }
 }

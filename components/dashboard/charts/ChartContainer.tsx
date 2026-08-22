@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 import { useChartResponsive } from '@/lib/hooks/useChartResponsive';
 import { ChartSkeleton } from './ChartSkeleton';
 
@@ -16,8 +16,9 @@ interface ChartContainerProps {
 /**
  * Chart Container Component
  * Wrapper for all dashboard charts with loading and error states
+ * Memoized to prevent unnecessary re-renders
  */
-export const ChartContainer: React.FC<ChartContainerProps> = ({
+const ChartContainerComponent: React.FC<ChartContainerProps> = ({
   title,
   children,
   isLoading = false,
@@ -66,5 +67,10 @@ export const ChartContainer: React.FC<ChartContainerProps> = ({
     </div>
   );
 };
+
+/**
+ * Memoized ChartContainer to prevent unnecessary re-renders
+ */
+export const ChartContainer = memo(ChartContainerComponent);
 
 ChartContainer.displayName = 'ChartContainer';

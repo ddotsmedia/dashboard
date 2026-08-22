@@ -3,6 +3,7 @@
 import { ReactNode, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
+import { SkipLink } from '@/components/accessibility/SkipLink';
 import { useUI } from '@/lib/store';
 import { useDirection } from '@/lib/hooks/useDirection';
 import { useIsMobile, useIsTablet } from '@/lib/responsive';
@@ -37,6 +38,8 @@ export function MainLayout({ children }: MainLayoutProps) {
         direction === 'rtl' ? 'flex-row-reverse' : 'flex-row'
       }`}
     >
+      {/* Skip Link - Visible on Tab focus */}
+      <SkipLink />
       {/* Overlay for mobile sidebar */}
       {isMobile && sidebarOpen && (
         <div
@@ -48,6 +51,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
       {/* Sidebar */}
       <aside
+        id="sidebar"
         className={`${sidebarWidthClass} ${sidebarPosition} ${sidebarZIndex} ${
           sidebarOpen ? 'translate-x-0' : isMobile ? '-translate-x-full' : 'translate-x-0'
         } transition-all duration-250 overflow-hidden h-screen ${
@@ -55,6 +59,7 @@ export function MainLayout({ children }: MainLayoutProps) {
             ? 'border-l border-gray-200 dark:border-gray-700'
             : 'border-r border-gray-200 dark:border-gray-700'
         }`}
+        aria-hidden={isMobile && !sidebarOpen ? 'true' : undefined}
       >
         <Sidebar />
       </aside>
@@ -65,7 +70,12 @@ export function MainLayout({ children }: MainLayoutProps) {
         <Header />
 
         {/* Content */}
-        <main className="flex-1 overflow-auto">
+        <main
+          id="main-content"
+          role="main"
+          className="flex-1 overflow-auto"
+          tabIndex={-1}
+        >
           <div className="p-4 sm:p-6 md:p-6 lg:p-8">
             {children}
           </div>

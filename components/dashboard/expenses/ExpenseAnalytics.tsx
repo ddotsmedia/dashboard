@@ -39,8 +39,6 @@ export function ExpenseAnalytics() {
   };
 
   const handleCategoryFilter = (category: string) => {
-    console.log(`[Mock] Navigating to expenses filtered by: ${category}`);
-    // In production, this would navigate with query params or update filters
     router.push(`/expenses?category=${encodeURIComponent(category)}`);
   };
 

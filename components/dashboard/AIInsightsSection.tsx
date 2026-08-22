@@ -26,7 +26,9 @@ const MOCK_INSIGHTS: Insight[] = [
     timestamp: new Date(Date.now() - 5 * 60000), // 5 mins ago
     action: {
       label: 'View Details',
-      onClick: () => console.log('View revenue details'),
+      onClick: () => {
+        // Placeholder for view details action
+      },
     },
   },
   {
@@ -40,7 +42,9 @@ const MOCK_INSIGHTS: Insight[] = [
     timestamp: new Date(Date.now() - 15 * 60000), // 15 mins ago
     action: {
       label: 'Review',
-      onClick: () => console.log('Review overdue receivables'),
+      onClick: () => {
+        // Placeholder for review action
+      },
     },
   },
   {

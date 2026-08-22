@@ -1,0 +1,168 @@
+
+> accounts-dashboard@0.1.0 dev
+> next dev
+
+▲ Next.js 16.3.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.134:3000
+- Environments: .env.local
+✓ Ready in 391ms
+⚠ Invalid next.config.ts options detected: 
+⚠     Unrecognized key(s) in object: 'turbo' at "experimental"
+⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+✓ Running next.config.ts took 54ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+- Experiments (use with caution):
+  ? turbo (invalid experimental key)
+
+⨯ Error: Couldn't find next-intl config file. Please follow the instructions at https://next-intl.dev/docs/getting-started/app-router
+    at LocaleLayout (app\[locale]\layout.tsx:50:37)
+  48 |   }
+  49 |
+> 50 |   const messages = await getMessages();
+     |                                     ^
+  51 |   const isRTL = locale === 'ar';
+  52 |   const dir = isRTL ? 'rtl' : 'ltr';
+  53 | {
+  digest: '393793397'
+}
+(node:9784) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ GET /en/dashboard 500 in 4.7s (next.js: 3.6s, proxy.ts: 52ms, generate-params: 378ms, application-code: 677ms)
+⨯ Error: Couldn't find next-intl config file. Please follow the instructions at https://next-intl.dev/docs/getting-started/app-router
+    at LocaleLayout (app\[locale]\layout.tsx:50:37)
+  48 |   }
+  49 |
+> 50 |   const messages = await getMessages();
+     |                                     ^
+  51 |   const isRTL = locale === 'ar';
+  52 |   const dir = isRTL ? 'rtl' : 'ltr';
+  53 | {
+  digest: '393793397'
+}
+ GET /en/dashboard 500 in 73ms (next.js: 10ms, proxy.ts: 3ms, generate-params: 5ms, application-code: 56ms)
+[browser] Uncaught Error: Couldn't find next-intl config file. Please follow the instructions at https://next-intl.dev/docs/getting-started/app-router
+    at LocaleLayout (app\[locale]\layout.tsx:50:37)
+  48 |   }
+  49 |
+> 50 |   const messages = await getMessages();
+     |                                     ^
+  51 |   const isRTL = locale === 'ar';
+  52 |   const dir = isRTL ? 'rtl' : 'ltr';
+  53 |
+⨯ Error: Couldn't find next-intl config file. Please follow the instructions at https://next-intl.dev/docs/getting-started/app-router
+    at LocaleLayout (app\[locale]\layout.tsx:50:37)
+  48 |   }
+  49 |
+> 50 |   const messages = await getMessages();
+     |                                     ^
+  51 |   const isRTL = locale === 'ar';
+  52 |   const dir = isRTL ? 'rtl' : 'ltr';
+  53 | {
+  digest: '393793397'
+}
+ GET /en/dashboard 500 in 97ms (next.js: 16ms, proxy.ts: 6ms, generate-params: 6ms, application-code: 69ms)
+[browser] Uncaught Error: Couldn't find next-intl config file. Please follow the instructions at https://next-intl.dev/docs/getting-started/app-router
+    at LocaleLayout (app\[locale]\layout.tsx:50:37)
+  48 |   }
+  49 |
+> 50 |   const messages = await getMessages();
+     |                                     ^
+  51 |   const isRTL = locale === 'ar';
+  52 |   const dir = isRTL ? 'rtl' : 'ltr';
+  53 |
+⨯ Error: Couldn't find next-intl config file. Please follow the instructions at https://next-intl.dev/docs/getting-started/app-router
+    at LocaleLayout (app\[locale]\layout.tsx:50:37)
+  48 |   }
+  49 |
+> 50 |   const messages = await getMessages();
+     |                                     ^
+  51 |   const isRTL = locale === 'ar';
+  52 |   const dir = isRTL ? 'rtl' : 'ltr';
+  53 | {
+  digest: '393793397'
+}
+ GET /en/dashboard 500 in 91ms (next.js: 25ms, proxy.ts: 6ms, generate-params: 6ms, application-code: 55ms)
+[browser] Uncaught Error: Couldn't find next-intl config file. Please follow the instructions at https://next-intl.dev/docs/getting-started/app-router
+    at LocaleLayout (app\[locale]\layout.tsx:50:37)
+  48 |   }
+  49 |
+> 50 |   const messages = await getMessages();
+     |                                     ^
+  51 |   const isRTL = locale === 'ar';
+  52 |   const dir = isRTL ? 'rtl' : 'ltr';
+  53 |
+⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+▲ Next.js 16.3.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.134:3000
+- Environments: .env.local
+✓ Ready in 335ms
+⚠ Invalid next.config.ts options detected: 
+⚠     Unrecognized key(s) in object: 'turbo' at "experimental"
+⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+✓ Running next.config.ts took 29ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+- Experiments (use with caution):
+  ? turbo (invalid experimental key)
+
+⨯ Error: Couldn't find next-intl config file. Please follow the instructions at https://next-intl.dev/docs/getting-started/app-router
+    at LocaleLayout (app\[locale]\layout.tsx:50:37)
+  48 |   }
+  49 |
+> 50 |   const messages = await getMessages();
+     |                                     ^
+  51 |   const isRTL = locale === 'ar';
+  52 |   const dir = isRTL ? 'rtl' : 'ltr';
+  53 | {
+  digest: '393793397'
+}
+(node:20308) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ GET /en/dashboard 500 in 1161ms (next.js: 162ms, proxy.ts: 52ms, generate-params: 358ms, application-code: 589ms)
+⨯ Error: Couldn't find next-intl config file. Please follow the instructions at https://next-intl.dev/docs/getting-started/app-router
+    at LocaleLayout (app\[locale]\layout.tsx:50:37)
+  48 |   }
+  49 |
+> 50 |   const messages = await getMessages();
+     |                                     ^
+  51 |   const isRTL = locale === 'ar';
+  52 |   const dir = isRTL ? 'rtl' : 'ltr';
+  53 | {
+  digest: '393793397'
+}
+ GET /en/dashboard 500 in 60ms (next.js: 10ms, proxy.ts: 5ms, generate-params: 4ms, application-code: 42ms)
+⨯ Error: Couldn't find next-intl config file. Please follow the instructions at https://next-intl.dev/docs/getting-started/app-router
+    at LocaleLayout (app\[locale]\layout.tsx:50:37)
+  48 |   }
+  49 |
+> 50 |   const messages = await getMessages();
+     |                                     ^
+  51 |   const isRTL = locale === 'ar';
+  52 |   const dir = isRTL ? 'rtl' : 'ltr';
+  53 | {
+  digest: '393793397'
+}
+ GET /en/dashboard 500 in 53ms (next.js: 9ms, proxy.ts: 2ms, generate-params: 4ms, application-code: 38ms)
+⨯ Error: Couldn't find next-intl config file. Please follow the instructions at https://next-intl.dev/docs/getting-started/app-router
+    at LocaleLayout (app\[locale]\layout.tsx:50:37)
+  48 |   }
+  49 |
+> 50 |   const messages = await getMessages();
+     |                                     ^
+  51 |   const isRTL = locale === 'ar';
+  52 |   const dir = isRTL ? 'rtl' : 'ltr';
+  53 | {
+  digest: '393793397'
+}
+ GET /en/dashboard 500 in 55ms (next.js: 8ms, proxy.ts: 3ms, generate-params: 0.0ms, application-code: 44ms)

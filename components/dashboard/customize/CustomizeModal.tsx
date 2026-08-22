@@ -10,6 +10,7 @@ import { X } from 'lucide-react';
 import clsx from 'clsx';
 import { useChartResponsive } from '@/lib/hooks/useChartResponsive';
 import { useDashboardCustomization } from '@/hooks/useDashboardCustomization';
+import { useFocusManagement } from '@/hooks/useFocusManagement';
 import { WidgetGallery } from './WidgetGallery';
 import { LayoutPreview } from './LayoutPreview';
 import { LayoutManager } from './LayoutManager';
@@ -21,6 +22,7 @@ interface CustomizeModalProps {
 
 export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
   const { isMobile } = useChartResponsive();
+  const { containerRef, handleKeyDown } = useFocusManagement(isOpen, onClose);
   const {
     widgetVisibility,
     widgetOrder,
@@ -57,6 +59,7 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
           'backdrop-blur-sm'
         )}
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Modal Container - Responsive sizing */}
@@ -64,10 +67,17 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
         'fixed inset-0 z-50 flex items-center justify-center overflow-y-auto',
         isMobile ? 'p-0' : 'p-4'
       )}>
-        <div className={clsx(
-          'relative w-full my-0',
-          isMobile ? 'max-h-[100vh]' : 'max-w-6xl my-8'
-        )}>
+        <div
+          ref={containerRef}
+          onKeyDown={handleKeyDown}
+          className={clsx(
+            'relative w-full my-0',
+            isMobile ? 'max-h-[100vh]' : 'max-w-6xl my-8'
+          )}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+        >
           {/* Modal Content */}
           <div className="bg-white dark:bg-slate-900 rounded-t-lg shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col max-h-[90vh]">
             {/* Header - Responsive padding */}
@@ -75,10 +85,13 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
               padding: isMobile ? '16px' : '24px'
             }}>
               <div className="flex-1">
-                <h2 className={clsx(
-                  'font-bold text-slate-900 dark:text-white',
-                  isMobile ? 'text-lg' : 'text-2xl'
-                )}>
+                <h2
+                  id="modal-title"
+                  className={clsx(
+                    'font-bold text-slate-900 dark:text-white',
+                    isMobile ? 'text-lg' : 'text-2xl'
+                  )}
+                >
                   Customize Dashboard
                 </h2>
                 {!isMobile && (
@@ -94,6 +107,7 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
                   'text-slate-500 dark:text-slate-400',
                   'hover:bg-slate-100 dark:hover:bg-slate-800',
                   'hover:text-slate-700 dark:hover:text-slate-200',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900',
                   isMobile ? 'p-3 h-11 w-11' : 'p-2 h-8 w-8'
                 )}
                 aria-label="Close modal"
@@ -167,7 +181,8 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
                   className={clsx(
                     'px-4 py-2 rounded-lg font-medium transition-colors duration-150',
                     'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300',
-                    'hover:bg-slate-200 dark:hover:bg-slate-700'
+                    'hover:bg-slate-200 dark:hover:bg-slate-700',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900'
                   )}
                 >
                   Reset to Default
@@ -184,6 +199,7 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
                     'px-4 py-2 rounded-lg font-medium transition-colors duration-150',
                     'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300',
                     'hover:bg-slate-200 dark:hover:bg-slate-700',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900',
                     isMobile ? 'w-full' : 'hidden'
                   )}
                 >
@@ -195,6 +211,7 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
                     'px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors duration-150',
                     'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white',
                     'hover:bg-slate-200 dark:hover:bg-slate-700',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900',
                     isMobile ? 'flex-1' : ''
                   )}
                 >
@@ -206,6 +223,7 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
                     'px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors duration-150',
                     'bg-indigo-600 dark:bg-indigo-700 text-white',
                     'hover:bg-indigo-700 dark:hover:bg-indigo-600',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900',
                     isMobile ? 'flex-1 h-11 flex items-center justify-center' : ''
                   )}
                 >
@@ -219,9 +237,17 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
 
       {/* Reset Confirmation Dialog */}
       {confirmReset && (
-        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 rounded-lg">
+        <div
+          className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 rounded-lg"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="confirm-reset-title"
+        >
           <div className="bg-white dark:bg-slate-900 rounded-lg p-6 max-w-sm mx-4 border border-slate-200 dark:border-slate-700">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+            <h3
+              id="confirm-reset-title"
+              className="text-lg font-semibold text-slate-900 dark:text-white mb-2"
+            >
               Reset to Default Layout?
             </h3>
             <p className="text-slate-600 dark:text-slate-400 mb-4 text-sm">
@@ -233,7 +259,8 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
                 className={clsx(
                   'px-4 py-2 rounded-lg font-medium transition-colors duration-150',
                   'bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white',
-                  'hover:bg-slate-300 dark:hover:bg-slate-600'
+                  'hover:bg-slate-300 dark:hover:bg-slate-600',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900'
                 )}
               >
                 Cancel
@@ -243,7 +270,8 @@ export function CustomizeModal({ isOpen, onClose }: CustomizeModalProps) {
                 className={clsx(
                   'px-4 py-2 rounded-lg font-medium transition-colors duration-150',
                   'bg-orange-600 dark:bg-orange-700 text-white',
-                  'hover:bg-orange-700 dark:hover:bg-orange-600'
+                  'hover:bg-orange-700 dark:hover:bg-orange-600',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900'
                 )}
               >
                 Reset

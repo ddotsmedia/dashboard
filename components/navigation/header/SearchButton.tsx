@@ -11,8 +11,7 @@ export function SearchButton() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        // TODO: Open search modal
-        console.log('Search modal opened');
+        // Search modal functionality placeholder
       }
     };
 

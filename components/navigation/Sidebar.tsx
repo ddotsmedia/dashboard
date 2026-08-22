@@ -67,7 +67,10 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-2 md:px-3 py-4 space-y-1">
+      <nav
+        aria-label="Main navigation"
+        className="flex-1 overflow-y-auto px-2 md:px-3 py-4 space-y-1"
+      >
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
@@ -82,7 +85,8 @@ export function Sidebar() {
                   setSidebarOpen(false);
                 }
               }}
-              className={`flex items-center gap-3 ${navItemPadding} ${navItemMinHeight} rounded-md transition-colors ${
+              aria-current={isActive ? 'page' : undefined}
+              className={`flex items-center gap-3 ${navItemPadding} ${navItemMinHeight} rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 ${
                 isActive
                   ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
                   : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'

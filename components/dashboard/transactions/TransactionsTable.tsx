@@ -155,11 +155,12 @@ export function TransactionsTable() {
         header: ({ column }) => (
           <button
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            className="flex items-center gap-1 font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            className="flex items-center gap-1 font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800 rounded px-1"
+            aria-sort={column.getIsSorted() === 'asc' ? 'ascending' : column.getIsSorted() === 'desc' ? 'descending' : 'none'}
           >
             Date
-            {column.getIsSorted() === 'asc' && <ArrowUpDown size={16} className="text-blue-500" />}
-            {column.getIsSorted() === 'desc' && <ArrowUpDown size={16} className="text-blue-500" />}
+            {column.getIsSorted() === 'asc' && <ArrowUpDown size={16} className="text-blue-500" aria-hidden="true" />}
+            {column.getIsSorted() === 'desc' && <ArrowUpDown size={16} className="text-blue-500" aria-hidden="true" />}
           </button>
         ),
         cell: ({ row }) => {
@@ -228,11 +229,12 @@ export function TransactionsTable() {
         header: ({ column }) => (
           <button
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            className="flex items-center justify-end gap-1 font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            className="flex items-center justify-end gap-1 font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800 rounded px-1"
+            aria-sort={column.getIsSorted() === 'asc' ? 'ascending' : column.getIsSorted() === 'desc' ? 'descending' : 'none'}
           >
             Amount
-            {column.getIsSorted() === 'asc' && <ArrowUpDown size={16} className="text-blue-500" />}
-            {column.getIsSorted() === 'desc' && <ArrowUpDown size={16} className="text-blue-500" />}
+            {column.getIsSorted() === 'asc' && <ArrowUpDown size={16} className="text-blue-500" aria-hidden="true" />}
+            {column.getIsSorted() === 'desc' && <ArrowUpDown size={16} className="text-blue-500" aria-hidden="true" />}
           </button>
         ),
         cell: ({ row }) => {
@@ -282,9 +284,11 @@ export function TransactionsTable() {
               setSelectedTransaction(row.original);
               setIsDrawerOpen(true);
             }}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors"
+            className="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800"
+            aria-label={`View details for transaction ${row.original.reference || row.original.description}`}
+            title="View transaction details"
           >
-            <MoreVertical size={16} className="text-gray-500 dark:text-gray-400" />
+            <MoreVertical size={16} className="text-gray-500 dark:text-gray-400" aria-hidden="true" />
           </button>
         ),
         size: 50,
@@ -355,7 +359,7 @@ export function TransactionsTable() {
         <p className="text-sm text-red-700 dark:text-red-200 mb-4">{error?.message || 'An unknown error occurred'}</p>
         <button
           onClick={() => window.location.reload()}
-          className="px-4 py-2 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition-colors font-medium"
+          className="px-4 py-2 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition-colors font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-white"
         >
           Retry
         </button>
@@ -385,18 +389,20 @@ export function TransactionsTable() {
           {!isMobile && <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Export</span>}
           <button
             onClick={handleExportCSV}
-            className="flex items-center gap-1 px-2 sm:px-3 py-2 text-xs font-medium bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors"
+            className="flex items-center gap-1 px-2 sm:px-3 py-2 text-xs font-medium bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800"
             title="Export as CSV"
+            aria-label="Export transactions as CSV"
           >
-            <FileSpreadsheet size={isMobile ? 14 : 16} />
+            <FileSpreadsheet size={isMobile ? 14 : 16} aria-hidden="true" />
             {!isMobile && 'CSV'}
           </button>
           <button
             onClick={handleExportPDF}
-            className="flex items-center gap-1 px-2 sm:px-3 py-2 text-xs font-medium bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg hover:bg-red-100 dark:hover:bg-red-800 transition-colors"
+            className="flex items-center gap-1 px-2 sm:px-3 py-2 text-xs font-medium bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg hover:bg-red-100 dark:hover:bg-red-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800"
             title="Export as PDF"
+            aria-label="Export transactions as PDF"
           >
-            <Download size={isMobile ? 14 : 16} />
+            <Download size={isMobile ? 14 : 16} aria-hidden="true" />
             {!isMobile && 'PDF'}
           </button>
         </div>
@@ -425,10 +431,12 @@ export function TransactionsTable() {
                 <button
                   key={column.id}
                   onClick={() => column.toggleVisibility()}
-                  className="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  className="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800 rounded"
                   title={`${column.columnDef.header ? `Toggle ${column.columnDef.header}` : 'Toggle column'}`}
+                  aria-label={`${column.getIsVisible() ? 'Hide' : 'Show'} ${column.columnDef.header || 'column'}`}
+                  aria-pressed={column.getIsVisible()}
                 >
-                  {column.getIsVisible() ? <Eye size={16} /> : <EyeOff size={16} />}
+                  {column.getIsVisible() ? <Eye size={16} aria-hidden="true" /> : <EyeOff size={16} aria-hidden="true" />}
                 </button>
               );
             })}

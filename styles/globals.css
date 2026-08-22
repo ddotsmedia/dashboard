@@ -80,8 +80,50 @@ select {
   color: var(--color-bg);
 }
 
-/* Focus styles */
+/* Focus styles - Accessible focus indicators */
 :focus-visible {
+  outline: 2px solid var(--color-info);
+  outline-offset: 2px;
+}
+
+/* Enhanced focus styles for better visibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--color-info);
+  outline-offset: 2px;
+}
+
+/* Remove default outline for elements that use focus-visible */
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+}
+
+/* Dark mode focus indicators */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) button:focus-visible,
+  :root:not([data-theme='light']) a:focus-visible,
+  :root:not([data-theme='light']) input:focus-visible,
+  :root:not([data-theme='light']) select:focus-visible,
+  :root:not([data-theme='light']) textarea:focus-visible {
+    outline: 2px solid var(--color-info);
+    outline-offset: 2px;
+  }
+}
+
+/* Explicit dark theme focus */
+:root[data-theme='dark'] button:focus-visible,
+:root[data-theme='dark'] a:focus-visible,
+:root[data-theme='dark'] input:focus-visible,
+:root[data-theme='dark'] select:focus-visible,
+:root[data-theme='dark'] textarea:focus-visible {
   outline: 2px solid var(--color-info);
   outline-offset: 2px;
 }
