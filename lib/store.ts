@@ -6,6 +6,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User, Role } from '@/types/user';
+import { DEFAULT_LAYOUT } from '@/config/defaultLayout';
 
 /**
  * Filter State
@@ -63,6 +64,29 @@ export interface Notification {
   duration?: number;
 }
 
+/**
+ * Layout State
+ */
+export interface Layout {
+  widgetVisibility: Record<string, boolean>;
+  widgetOrder: string[];
+  widgetSizes: Record<string, 1 | 2 | 3 | 4>;
+}
+
+export interface DashboardSlice {
+  widgetVisibility: Record<string, boolean>;
+  widgetOrder: string[];
+  widgetSizes: Record<string, 1 | 2 | 3 | 4>;
+  savedLayouts: Record<string, Layout>;
+  toggleWidget: (widgetId: string) => void;
+  setWidgetOrder: (order: string[]) => void;
+  setWidgetSize: (widgetId: string, size: 1 | 2 | 3 | 4) => void;
+  resetLayout: () => void;
+  saveLayout: (name: string, layout: Layout) => void;
+  loadLayout: (name: string) => void;
+  deleteLayout: (name: string) => void;
+}
+
 // Default values
 const DEFAULT_DATE_RANGE = {
   startDate: new Date(new Date().setMonth(new Date().getMonth() - 12)),
@@ -115,7 +139,7 @@ const DEFAULT_MOCK_USER: User = {
 /**
  * Combined Store Type
  */
-type Store = FilterSlice & UISlice & AuthSlice;
+type Store = FilterSlice & UISlice & AuthSlice & DashboardSlice;
 
 /**
  * Zustand Store with Persistence
@@ -186,9 +210,58 @@ export const useStore = create<Store>()(
           isAuthenticated: false,
           notifications: [],
         }),
+
+      // Dashboard Slice
+      widgetVisibility: DEFAULT_LAYOUT.widgetVisibility,
+      widgetOrder: DEFAULT_LAYOUT.widgetOrder,
+      widgetSizes: DEFAULT_LAYOUT.widgetSizes,
+      savedLayouts: {},
+      toggleWidget: (widgetId) =>
+        set((state) => ({
+          widgetVisibility: {
+            ...state.widgetVisibility,
+            [widgetId]: !state.widgetVisibility[widgetId],
+          },
+        })),
+      setWidgetOrder: (order) => set({ widgetOrder: order }),
+      setWidgetSize: (widgetId, size) =>
+        set((state) => ({
+          widgetSizes: {
+            ...state.widgetSizes,
+            [widgetId]: size,
+          },
+        })),
+      resetLayout: () =>
+        set({
+          widgetVisibility: DEFAULT_LAYOUT.widgetVisibility,
+          widgetOrder: DEFAULT_LAYOUT.widgetOrder,
+          widgetSizes: DEFAULT_LAYOUT.widgetSizes,
+        }),
+      saveLayout: (name, layout) =>
+        set((state) => ({
+          savedLayouts: {
+            ...state.savedLayouts,
+            [name]: layout,
+          },
+        })),
+      loadLayout: (name) =>
+        set((state) => {
+          const layout = state.savedLayouts[name];
+          if (!layout) return state;
+          return {
+            widgetVisibility: layout.widgetVisibility,
+            widgetOrder: layout.widgetOrder,
+            widgetSizes: layout.widgetSizes,
+          };
+        }),
+      deleteLayout: (name) =>
+        set((state) => {
+          const { [name]: _, ...rest } = state.savedLayouts;
+          return { savedLayouts: rest };
+        }),
     }),
     {
-      name: 'dashboard-store',
+      name: 'dashboard-customization',
       partialize: (state) => ({
         dateRange: state.dateRange,
         company: state.company,
@@ -199,6 +272,10 @@ export const useStore = create<Store>()(
         theme: state.theme,
         currentUser: state.currentUser,
         currentRole: state.currentRole,
+        widgetVisibility: state.widgetVisibility,
+        widgetOrder: state.widgetOrder,
+        widgetSizes: state.widgetSizes,
+        savedLayouts: state.savedLayouts,
       }),
     }
   )
@@ -243,4 +320,49 @@ export const useAuth = () =>
     setCurrentUser: state.setCurrentUser,
     setCurrentRole: state.setCurrentRole,
     logout: state.logout,
+  }));
+
+/**
+ * Dashboard Layout Selector Hooks
+ */
+export const useWidgetVisibility = () =>
+  useStore((state) => ({
+    widgetVisibility: state.widgetVisibility,
+    toggleWidget: state.toggleWidget,
+  }));
+
+export const useWidgetOrder = () =>
+  useStore((state) => ({
+    widgetOrder: state.widgetOrder,
+    setWidgetOrder: state.setWidgetOrder,
+  }));
+
+export const useWidgetSizes = () =>
+  useStore((state) => ({
+    widgetSizes: state.widgetSizes,
+    setWidgetSize: state.setWidgetSize,
+  }));
+
+export const useSavedLayouts = () =>
+  useStore((state) => ({
+    savedLayouts: state.savedLayouts,
+    saveLayout: state.saveLayout,
+    loadLayout: state.loadLayout,
+    deleteLayout: state.deleteLayout,
+    resetLayout: state.resetLayout,
+  }));
+
+export const useDashboardLayout = () =>
+  useStore((state) => ({
+    widgetVisibility: state.widgetVisibility,
+    widgetOrder: state.widgetOrder,
+    widgetSizes: state.widgetSizes,
+    savedLayouts: state.savedLayouts,
+    toggleWidget: state.toggleWidget,
+    setWidgetOrder: state.setWidgetOrder,
+    setWidgetSize: state.setWidgetSize,
+    resetLayout: state.resetLayout,
+    saveLayout: state.saveLayout,
+    loadLayout: state.loadLayout,
+    deleteLayout: state.deleteLayout,
   }));
