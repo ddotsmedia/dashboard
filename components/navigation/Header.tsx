@@ -1,7 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import { useUI } from '@/lib/store';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sliders } from 'lucide-react';
 import { CompanySelector } from './selectors/CompanySelector';
 import { BranchSelector } from './selectors/BranchSelector';
 import { DateRangeSelector } from './selectors/DateRangeSelector';
@@ -12,10 +13,12 @@ import { SearchButton } from './header/SearchButton';
 import { NotificationsBell } from './header/NotificationsBell';
 import { UserMenu } from './header/UserMenu';
 import { useIsMobile } from '@/lib/responsive';
+import { CustomizeModal } from '@/components/dashboard/CustomizeModal';
 
 export function Header() {
   const { sidebarOpen, toggleSidebar } = useUI();
   const isMobile = useIsMobile();
+  const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-40 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
@@ -59,6 +62,13 @@ export function Header() {
           </div>
           <SearchButton />
           <NotificationsBell />
+          <button
+            onClick={() => setIsCustomizeModalOpen(true)}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+            title="Customize Dashboard"
+          >
+            <Sliders className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+          </button>
           <ThemeSwitcher />
           <UserMenu />
         </div>
@@ -72,6 +82,12 @@ export function Header() {
         </div>
         <DateRangeSelector />
       </div>
+
+      {/* Customize Modal */}
+      <CustomizeModal
+        isOpen={isCustomizeModalOpen}
+        onClose={() => setIsCustomizeModalOpen(false)}
+      />
     </header>
   );
 }
