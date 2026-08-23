@@ -1,16 +1,10 @@
 import type { ReactNode } from 'react';
 import type { Metadata, Viewport } from 'next';
 import { notFound } from 'next/navigation';
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
 import { locales } from '@/i18n/config';
+import { QueryProvider } from '@/components/providers/QueryProvider';
 import '@/styles/globals.css';
 import '@/styles/variables.css';
-import { QueryProvider } from '@/components/providers/QueryProvider';
-import { AIAssistantPanel } from '@/components/ai/AIAssistantPanel';
-
-// Mark this layout as dynamic to avoid build-time static generation issues with next-intl
-export const dynamic = 'force-dynamic';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -47,7 +41,6 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  const messages = await getMessages();
   const isRTL = locale === 'ar';
   const dir = isRTL ? 'rtl' : 'ltr';
 
@@ -60,12 +53,9 @@ export default async function LocaleLayout({
       data-theme="light"
     >
       <body className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50">
-        <NextIntlClientProvider messages={messages} locale={locale}>
-          <QueryProvider>
-            {children}
-            <AIAssistantPanel />
-          </QueryProvider>
-        </NextIntlClientProvider>
+        <QueryProvider>
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );
